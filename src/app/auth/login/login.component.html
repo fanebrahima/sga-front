@@ -1,0 +1,117 @@
+<div class="main-container text-black dark:text-white-dark min-h-screen">
+
+	<div class="flex min-h-screen">
+		<div
+			class="bg-gradient-to-t w-1/2  min-h-screen hidden lg:flex flex-col items-center justify-center text-white dark:text-black p-4" style="background-color: rgb(55 55 54 / 0.6);">
+			<div class="w-full mx-auto mb-5"><img src="../assets/images/img01.jpg" alt="coming_soon"
+					class="lg:max-w-[370px] xl:max-w-[500px] mx-auto" /></div>
+			<h3 class="text-3xl font-bold mb-4 text-center">Bienvenue sur eMission</h3>
+			<p>Plateforme de Gestion des missions de SGA EXPERTISE</p>
+		</div>
+		<div class="w-full lg:w-1/2 relative flex justify-center items-center" *ngIf="!forgotPassword">
+			<div class="max-w-[480px] p-5 md:p-10">
+				<div class="p-5">
+					<img src="../../../assets/images/logo_eg.jpg" width="100%" height="100%" alt="logo">
+				</div>
+				<div class="flex justify-center items-center">
+					<h2 class="font-bold text-3xl mb-3">Connexion</h2>
+				</div>
+				<div>
+					<div class="flex items-center p-3.5 rounded text-success bg-success-light dark:bg-success-dark-light" *ngIf="success_exist">
+						<span class="ltr:pr-2 rtl:pl-2">{{success_message}}</span>
+					</div>
+					<div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="error_exist">
+						<span class="ltr:pr-2 rtl:pl-2">{{error_message}}</span>
+					</div>
+					<div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngFor="let item of api_error_message; let i = index;">
+						<span *ngIf="api_error_exist && api_error_message.length > 0" class="ltr:pr-2 rtl:pl-2">{{item.detail}}</span><br>
+					</div>
+					<form class="space-y-5" style="padding-bottom: 100px;" (ngSubmit)="onSubmit()">
+						<div [formGroup]="formGroup">
+							<label for="email">Email</label>
+							<input id="email" type="email" class="form-input" [(ngModel)]="email" name="email" formControlName="email"/>
+							<div *ngIf="submitted && f['email'].errors" class="mt-1">
+								<div *ngIf="submitted && f['email'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+								<div *ngIf="submitted && f['email'].errors?.['pattern']" class="text-danger">Ce champ doit être une adresse email !</div>
+							</div>
+						</div>
+						<div [formGroup]="formGroup">
+							<label for="password">Mot de passe</label>
+							<input id="password" type="password" class="form-input" type="password" [type]="show ? 'text' : 'password'" [(ngModel)]="user_password" name="user_password" formControlName="user_password"/>
+							<span (click)="password()"><i [class]="show ? 'fa fa-eye-slash' : 'fa fa-eye'"></i> {{show ? 'Cacher le mot de passe' : 'Afficher le mot de passe'}}</span>
+							<div *ngIf="submitted && f['user_password'].errors" class="mt-1">
+								<div *ngIf="submitted && f['user_password'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+							</div>
+						</div>
+
+						<button type="submit" class="btn btn-primary w-full" [disabled]="!email || !user_password" *ngIf="!submit">Se connecter</button>
+						<button type="button" class="btn btn-primary w-full" [disabled]="submit" *ngIf="submit && !submit_otp_code">
+							<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+								<line x1="12" y1="2" x2="12" y2="6"></line>
+								<line x1="12" y1="18" x2="12" y2="22"></line>
+								<line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+								<line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+								<line x1="2" y1="12" x2="6" y2="12"></line>
+								<line x1="18" y1="12" x2="22" y2="12"></line>
+								<line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+								<line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+							</svg>
+							Patientez ...
+						</button>
+						<p class="text-center">Mot de passe oublié ? <a href="#" (click)="forgotPassword = !forgotPassword" class="text-primary font-bold hover:underline">Réinitialiser</a></p>
+					</form>
+				</div>
+				<div
+					class="relative my-7 h-5 text-center before:w-full before:h-[1px] before:absolute before:inset-0 before:m-auto before:bg-[#ebedf2]  dark:before:bg-[#253b5c]">
+					<div
+						class="font-bold text-white-dark bg-[#fafafa] dark:bg-[#060818] px-2 relative z-[1] inline-block">
+						<span></span></div>
+				</div>
+			</div>
+		</div>
+		<div class="w-full lg:w-1/2 relative flex justify-center items-center" *ngIf="forgotPassword">
+			<div class="max-w-[480px] p-5 md:p-10">
+				<div class="p-5">
+					<img src="../../../assets/images/logo_eg.jpg" width="400" height="100" alt="logo">
+				</div>
+				<div class="flex justify-center items-center">
+					<h2 class="font-bold text-3xl mb-3">Mot de passe oublié</h2>
+				</div>
+				<div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="error_exist">
+                    <span class="ltr:pr-2 rtl:pl-2">{{error_message}}</span>
+                </div>
+				<br>
+				<form class="space-y-5" style="padding-bottom: 100px;" #loginForm=ngForm (ngSubmit)="submitForgotPassword()">
+					<div>
+						<label for="email">Email</label>
+						<input id="email" type="email" class="form-input" [(ngModel)]="email" name="email"/>
+					</div>
+
+					<button type="submit" class="btn btn-primary w-full" [disabled]="!email" *ngIf="!submit_forgot_password">Réinitialiser</button>
+					<button type="button" class="btn btn-primary w-full" [disabled]="submit_forgot_password" *ngIf="submit_forgot_password">
+						<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+							<line x1="12" y1="2" x2="12" y2="6"></line>
+							<line x1="12" y1="18" x2="12" y2="22"></line>
+							<line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+							<line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+							<line x1="2" y1="12" x2="6" y2="12"></line>
+							<line x1="18" y1="12" x2="22" y2="12"></line>
+							<line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+							<line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+						</svg>
+						Patientez ...
+					</button>
+					<!-- <p class="text-center" *ngIf="emailSent && counter > 0">Renvoyer le code dans : <span class="text-primary font-bold hover:underline">{{expirationCounter}}</span></p>
+					<p class="text-center" *ngIf="emailSent && counter <= 0"><button href="#" (click)="onSubmit()" class="text-primary font-bold hover:underline">Renvoyer le code maintenant</button></p> -->
+                    <p class="text-center">Connexion ? <a href="#" (click)="forgotPassword = !forgotPassword" class="text-primary font-bold hover:underline">Se connecter</a></p>
+				</form>
+				<div
+					class="relative my-7 h-5 text-center before:w-full before:h-[1px] before:absolute before:inset-0 before:m-auto before:bg-[#ebedf2]  dark:before:bg-[#253b5c]">
+					<div
+						class="font-bold text-white-dark bg-[#fafafa] dark:bg-[#060818] px-2 relative z-[1] inline-block">
+						<span></span></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

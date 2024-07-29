@@ -1,0 +1,88 @@
+<app-sidebar></app-sidebar>
+<div class="main-content">
+    <app-header></app-header>    
+    <div class="p-5">
+        <div class="p-6 animate__animated" :class="[$store.app.animation]">
+            <div x-data="sales">
+                <ul class="flex space-x-2 rtl:space-x-reverse">
+                    <li>
+                        <a href="javascript:;" class="text-primary hover:underline">Profil</a>
+                    </li>
+                </ul>
+    
+                <div class="pt-5" *ngIf="user_logged">
+                    <div class="row mb-5">
+                        <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="open && '!block'">
+                            <div class="flex items-start justify-center min-h-screen px-4">
+                                <div x-show="open" x-transition x-transition.duration.300 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-5xl my-8">
+                                    <h5 class="font-bold text-lg p-5">Information de {{user_logged.id.firstname}} {{user_logged.id.lastname}}</h5>
+                                    <div class="table-responsive">
+                                        <table class="table-hover">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Photo</th>
+                                                    <td>
+                                                        <div class="user-pro-img">
+                                                            <img src="{{user_logged.avatar}}" class="w-24 h-24 rounded-full object-cover" alt="photo" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Nom</th>
+                                                    <td>{{user_logged.id.firstname}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Prénoms</th>
+                                                    <td>{{user_logged.id.lastname}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Code</th>
+                                                    <td>{{user_logged.id.username}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Email</th>
+                                                    <td>{{user_logged.id.email}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Numéro mobile</th>
+                                                    <td>{{user_logged.id.mobile}}</td>
+                                                </tr> 
+                                                <tr>
+                                                    <th>Statut de l'utilisateur</th>
+                                                    <td> 
+                                                        <span class="badge badge-outline-success" *ngIf="user_logged.status_id.id == 24">{{user_logged.status_id.name}}</span>
+                                                        <span class="badge badge-outline-danger" *ngIf="user_logged.status_id.id == 25">{{user_logged.status_id.name}}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Profil</th>
+                                                    <td>{{user_logged.userprofile_id.name}}</td>
+                                                </tr>  
+                                                <tr>
+                                                    <th>Entité</th>
+                                                    <td>{{user_logged.entityfirm_id.name}}</td>
+                                                </tr>                                                
+                                                <tr>
+                                                    <th>Statut de l'entité</th>
+                                                    <td> 
+                                                        <span class="badge badge-outline-success" *ngIf="user_logged.entityfirm_id.status_id == 20">Actif(ve)</span>
+                                                        <span class="badge badge-outline-danger" *ngIf="user_logged.entityfirm_id.status_id == 21">Inactif(ve)</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <td>{{user_logged.entry_on | date: 'dd/MM/yyyy'}} à {{user_logged.entry_on | date: 'HH:mm'}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <app-preloader></app-preloader>
+            </div>    
+        </div>
+    </div>
+</div>

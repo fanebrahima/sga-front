@@ -1,0 +1,495 @@
+<app-sidebar></app-sidebar>
+<div class="main-content">
+    <app-header></app-header>
+    <div class="p-5">
+        <div class="p-6 animate__animated" :class="[$store.app.animation]">
+            <div x-data="sales">
+                <ul class="flex space-x-2 rtl:space-x-reverse">
+                    <li>
+                        <a href="javascript:;" class="text-primary hover:underline">Véhicules</a>
+                    </li>
+                    <li class="before:content-['/'] ltr:before:mr-1 rtl:before:ml-1">
+                        <span>Liste des véhicules</span>
+                    </li>
+                </ul>
+
+                <div class="pt-5" *ngIf="!itemSelected && !addItem">
+                    <div class="flex items-center justify-between flex-wrap gap-4">
+                        <h2 class="text-xl">Liste des véhicules</h2>
+                        <div class="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
+                            <div class="flex gap-3">
+                                <div class="relative ">
+                                    <form (submit)="search()">
+                                        <input type="text" placeholder="Recherche" name="information" [(ngModel)]="information" class="form-input py-2 ltr:pr-11 rtl:pl-11 peer"/>
+                                        <div class="absolute ltr:right-[11px] rtl:left-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
+
+                                            <svg class="mx-auto" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" stroke-width="1.5" opacity="0.5"></circle>
+                                                <path d="M18.5 18.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                            </svg>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div>
+                                    <button type="button" routerLink="#" class="btn btn-primary" (click)="itemSelected = !itemSelected; addItem = !addItem">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        </svg>
+                                        Nouveau véhicule
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table-hover">
+                            <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th>Action</th>
+                                    <th>N° Immatriculation</th>
+                                    <th>Marque</th>
+                                    <th>Modèle</th>
+                                    <th>Type</th>
+                                    <th>Option</th>
+                                    <th>Couleur</th>
+                                    <th>Kilométrage</th>
+                                    <th>Date de création</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody *ngIf="listItem?.length >= 0">
+                                <tr *ngFor="let item of listItem | filter:information; let i = index;">
+                                    <td>{{i+1}}</td>
+                                    <td class="text-center">
+                                        <ul class="flex gap-2">
+                                            <li>
+                                                <a href="javascript:;" x-tooltip="Détails" (click)="itemDetails(item)">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
+                                                        <path
+                                                            opacity="0.5"
+                                                            d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
+                                                            stroke="currentColor"
+                                                            stroke-width="1.5"
+                                                        ></path>
+                                                        <path d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z" stroke="currentColor" stroke-width="1.5"></path>
+                                                    </svg>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a (click)="itemEdit(item)" x-tooltip="Modifier">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 text-success">
+                                                        <path
+                                                            d="M15.2869 3.15178L14.3601 4.07866L5.83882 12.5999L5.83881 12.5999C5.26166 13.1771 4.97308 13.4656 4.7249 13.7838C4.43213 14.1592 4.18114 14.5653 3.97634 14.995C3.80273 15.3593 3.67368 15.7465 3.41556 16.5208L2.32181 19.8021L2.05445 20.6042C1.92743 20.9852 2.0266 21.4053 2.31063 21.6894C2.59466 21.9734 3.01478 22.0726 3.39584 21.9456L4.19792 21.6782L7.47918 20.5844L7.47919 20.5844C8.25353 20.3263 8.6407 20.1973 9.00498 20.0237C9.43469 19.8189 9.84082 19.5679 10.2162 19.2751C10.5344 19.0269 10.8229 18.7383 11.4001 18.1612L11.4001 18.1612L19.9213 9.63993L20.8482 8.71306C22.3839 7.17735 22.3839 4.68748 20.8482 3.15178C19.3125 1.61607 16.8226 1.61607 15.2869 3.15178Z"
+                                                            stroke="currentColor" stroke-width="1.5" />
+                                                        <path opacity="0.5" d="M14.36 4.07812C14.36 4.07812 14.4759 6.04774 16.2138 7.78564C17.9517 9.52354 19.9213 9.6394 19.9213 9.6394M4.19789 21.6777L2.32178 19.8015" stroke="currentColor"
+                                                            stroke-width="1.5" />
+                                                    </svg>
+                                                </a>
+                                            </li>
+                                            <li *ngIf="item.status_id == 2">
+                                                <a href="javascript:;" x-tooltip="Activer" (click)="itemAble(item)">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-success">
+                                                        <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" />
+                                                        <path d="M8.5 12.5L10.5 14.5L15.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>
+                                                </a>
+                                            </li>
+                                            <li *ngIf="item.status_id == 1">
+                                                <a href="javascript:;" x-tooltip="Désactiver" (click)="itemDisable(item)">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 m-auto text-danger">
+                                                        <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" />
+                                                        <path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                                    </svg>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>{{item.license_plate}}</td>
+                                    <td>{{item.brand_label}}</td>
+                                    <td>{{item.model}}</td>
+                                    <td>{{item.type}}</td>
+                                    <td>{{item.option}}</td>
+                                    <td>{{item.color_label}}</td>
+                                    <td>{{item.mileage}}</td>
+                                    <td>{{item.created_at | date: 'dd/MM/yyyy'}} à {{ item.created_at | date: 'HH:mm:ss' }}</td>
+                                    <td>
+                                        <span class="badge bg-success" *ngIf="item.status_id == 1">{{item.status_label}}</span>
+                                        <span class="badge bg-danger" *ngIf="item.status_id == 2">{{item.status_label}}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h1 *ngIf="listItem?.length <= 0" class="text-center items-center p-2">Aucune donnée à afficher</h1>
+                    </div>
+                    <div class="flex justify-center flex-col w-full mt-2">
+                        <div class="grid grid-cols-1 grid-cols-2 gap-2">
+                            <div style="padding-top: 10px;">
+                                <div class="d-flex mr-5" *ngIf="total">
+                                    <b>Affichage de {{from}} à {{to}} sur {{total | number:'':'fr-FR'}} éléments</b>
+                                </div>
+                                <div class="d-flex mr-5" *ngIf="!total">
+                                    <b>Affichage de 0 à 0 sur 0 élément</b>
+                                </div>
+                            </div>
+                            <div class="inline-flex items-center space-x-1 rtl:space-x-reverse m-auto mb-4">
+                                <ul class="inline-flex items-center space-x-1 rtl:space-x-reverse m-auto mb-4" *ngIf="total > per_page">
+                                    <li (click)="firstPage()">
+                                        <button type="button" [disabled]="current_page <= 1" class="flex justify-center font-semibold p-2 rounded-full transition bg-white-light text-dark hover:text-white hover:bg-primary dark:text-white-light dark:bg-[#191e3a] dark:hover:bg-primary">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 rtl:rotate-180">
+                                                <path d="M13 19L7 12L13 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path opacity="0.5" d="M16.9998 19L10.9998 12L16.9998 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                    </li>
+                                    <li (click)="previousPage()">
+                                        <button type="button" [disabled]="current_page <= 1" class="flex justify-center font-semibold p-2 rounded-full transition bg-white-light text-dark hover:text-white hover:bg-primary dark:text-white-light dark:bg-[#191e3a] dark:hover:bg-primary">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 rtl:rotate-180">
+                                                <path d="M15 5L9 12L15 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                    </li>
+                                    <li *ngIf="current_page > 2 && (from - (per_page * 2)) < total">
+                                        <button type="button" (click)="otherPageLeft2()" class="flex justify-center font-semibold px-3.5 py-2 rounded-full transition bg-white-light text-dark hover:text-white hover:bg-primary dark:text-white-light dark:bg-[#191e3a] dark:hover:bg-primary">
+                                            {{current_page - 2}}
+                                        </button>
+                                    </li>
+                                    <li *ngIf="current_page > 1 && (from - per_page) < total">
+                                        <button type="button" (click)="otherPageLeft1()" class="flex justify-center font-semibold px-3.5 py-2 rounded-full transition bg-white-light text-dark hover:text-white hover:bg-primary dark:text-white-light dark:bg-[#191e3a] dark:hover:bg-primary">
+                                            {{current_page - 1}}
+                                        </button>
+                                    </li>
+                                    <li *ngIf="current_page == 1">
+                                        <button type="button" class="flex justify-center font-semibold px-3.5 py-2 rounded-full transition bg-primary text-white dark:text-white-light dark:bg-primary">
+                                            {{current_page}}
+                                        </button>
+                                    </li>
+                                    <li *ngIf="current_page > 1">
+                                        <button type="button" class="flex justify-center font-semibold px-3.5 py-2 rounded-full transition bg-primary text-white dark:text-white-light dark:bg-primary">
+                                            {{current_page}}
+                                        </button>
+                                    </li>
+                                    <li *ngIf="(from + per_page) < total">
+                                        <button type="button" (click)="otherPageRigth1()" class="flex justify-center font-semibold px-3.5 py-2 rounded-full transition bg-white-light text-dark hover:text-white hover:bg-primary dark:text-white-light dark:bg-[#191e3a] dark:hover:bg-primary">
+                                            {{current_page + 1}}
+                                        </button>
+                                    </li>
+                                    <li *ngIf="(from + (per_page * 2)) < total">
+                                        <button type="button" (click)="otherPageRigth2()" class="flex justify-center font-semibold px-3.5 py-2 rounded-full transition bg-white-light text-dark hover:text-white hover:bg-primary dark:text-white-light dark:bg-[#191e3a] dark:hover:bg-primary">
+                                            {{(current_page / 1) + 2}}
+                                        </button>
+                                    </li>
+                                    <li (click)="nextPage()">
+                                        <button type="button" [disabled]="to >= total" class="flex justify-center font-semibold p-2 rounded-full transition bg-white-light text-dark hover:text-white hover:bg-primary dark:text-white-light dark:bg-[#191e3a] dark:hover:bg-primary">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 rtl:rotate-180">
+                                                <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                    </li>
+                                    <li (click)="lastPage()" tabindex="-1">
+                                        <button type="button" [disabled]="to >= total" class="flex justify-center font-semibold p-2 rounded-full transition bg-white-light text-dark hover:text-white hover:bg-primary dark:text-white-light dark:bg-[#191e3a] dark:hover:bg-primary">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 rtl:rotate-180">
+                                                <path d="M11 19L17 12L11 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path opacity="0.5" d="M6.99976 19L12.9998 12L6.99976 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-5" *ngIf="addItem">
+                    <div class="row mb-5">
+                        <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="open && '!block'">
+                            <div class="flex items-start justify-center min-h-screen px-4">
+                                <div x-show="open" x-transition x-transition.duration.300 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-5xl my-8">
+                                    <h5 class="font-bold text-lg p-5">Ajout d'une désignation</h5>
+                                    <div class="p-5">
+                                        <form class="space-y-5" style="padding-bottom: 100px;">
+                                            <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist_error">
+                                                <span class="ltr:pr-2 rtl:pl-2">{{error_message}}</span><br>
+                                            </div>
+                                            <div class="grid grid-cols-1 grid-cols-1 gap-1">
+                                                <div class="mb-3" [formGroup]="formGroupAdd">
+                                                    <label>N° Immatriculation <span style="color:red">*</span></label>
+                                                    <input type="text" class="form-input" formControlName="license_plate" [ngClass]="{ 'is-invalid': submitted && f['license_plate'].errors }"
+                                                        name="license_plate" [(ngModel)]="license_plate" />
+                                                    <div *ngIf="submitted && f['license_plate'].errors" class="mt-1">
+                                                        <div *ngIf="submitted && f['license_plate'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Marque <span style="color:red">*</span></label>
+                                                    <ng-select class="form-control" (change)="changeBrand(brand_id)" id="brand_id" [(ngModel)]="brand_id" name="brand_id" autocomplete="brand_id" autofocus>
+                                                        <ng-option *ngFor="let item of listBrand" [value]="item.id">{{ item.label }}</ng-option>
+                                                     </ng-select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Modèle <span style="color:red">*</span></label>
+                                                    <input type="text" class="form-input" name="model" [(ngModel)]="model" />
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Type</label>
+                                                    <input type="text" class="form-input" name="type" [(ngModel)]="type" />
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Option</label>
+                                                    <input type="text" class="form-input" name="option" [(ngModel)]="option" />
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Couleur <span style="color:red">*</span></label>
+                                                    <ng-select class="form-control" (change)="changeColor(color_id)" id="color_id" [(ngModel)]="color_id" name="color_id" autocomplete="color_id" autofocus>
+                                                        <ng-option *ngFor="let item of listColor" [value]="item.id">{{ item.label }}</ng-option>
+                                                     </ng-select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Kilométrage</label>
+                                                    <input type="number" min="0" class="form-input" name="mileage" [(ngModel)]="mileage" />
+                                                </div>
+
+                                            </div>
+
+                                            <div class="flex justify-end items-center mt-8">
+                                                <button type="button" (click)="resetAll(); itemSelected = !itemSelected; addItem = !addItem" class="btn btn-outline-danger">Annuler</button>
+                                                <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4" (click)="save();" [disabled]="submit" *ngIf="!submit">Enregistrer</button>
+                                                <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submit" *ngIf="submit">
+                                                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+                                                        <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                        <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                        <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                        <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                    </svg>
+                                                    Patientez ...
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-5" *ngIf="itemSelected && editItem">
+                    <div class="row mb-5">
+                        <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="open && '!block'">
+                            <div class="flex items-start justify-center min-h-screen px-4">
+                                <div x-show="open" x-transition x-transition.duration.300 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-5xl my-8">
+                                    <h5 class="font-bold text-lg p-5">Modification de {{itemSelected.label}}</h5>
+                                    <div class="p-5">
+                                        <form class="space-y-5" style="padding-bottom: 100px;" (submit)="update()">
+                                            <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist_error">
+                                                <span class="ltr:pr-2 rtl:pl-2">{{error_message}}</span><br>
+                                            </div>
+                                            <div class="grid grid-cols-1 grid-cols-1 gap-1">
+                                                <div class="mb-3" [formGroup]="formGroupEdit">
+                                                    <label>N° Immatriculation <span style="color:red">*</span></label>
+                                                    <input type="text" class="form-input" formControlName="license_plate" [ngClass]="{ 'is-invalid': submitted && f2['license_plate'].errors }"
+                                                        name="license_plate" [(ngModel)]="license_plate" />
+                                                    <div *ngIf="submitted && f2['license_plate'].errors" class="mt-1">
+                                                        <div *ngIf="submitted && f2['license_plate'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Marque <span style="color:red">*</span></label>
+                                                    <ng-select class="form-control" (change)="changeBrand(brand_id)" id="brand_id" [(ngModel)]="brand_id" name="brand_id" autocomplete="brand_id" autofocus>
+                                                        <ng-option *ngFor="let item of listBrand" [value]="item.id">{{ item.label }}</ng-option>
+                                                     </ng-select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Modèle <span style="color:red">*</span></label>
+                                                    <input type="text" class="form-input" name="model" [(ngModel)]="model" />
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Type</label>
+                                                    <input type="text" class="form-input" name="type" [(ngModel)]="type" />
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Option</label>
+                                                    <input type="text" class="form-input" name="option" [(ngModel)]="option" />
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Couleur <span style="color:red">*</span></label>
+                                                    <ng-select class="form-control" (change)="changeColor(color_id)" id="color_id" [(ngModel)]="color_id" name="color_id" autocomplete="color_id" autofocus>
+                                                        <ng-option *ngFor="let item of listColor" [value]="item.id">{{ item.label }}</ng-option>
+                                                     </ng-select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Kilométrage</label>
+                                                    <input type="number" min="0" class="form-input" name="mileage" [(ngModel)]="mileage" />
+                                                </div>
+
+                                            </div>
+
+                                            <div class="flex justify-end items-center mt-8">
+                                                <button type="button" (click)="resetAll(); itemSelected = !itemSelected" class="btn btn-outline-danger">Annuler</button>
+                                                <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submit" *ngIf="!submit">Enregistrer</button>
+                                                <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submit" *ngIf="submit">
+                                                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+                                                        <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                        <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                        <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                        <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                    </svg>
+                                                    Patientez ...
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-5" *ngIf="itemSelected && itemDetail">
+                    <div class="row mb-5">
+                        <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="open && '!block'">
+                            <div class="flex items-start justify-center min-h-screen px-4">
+                                <div x-show="open" x-transition x-transition.duration.300 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-5xl my-8">
+                                    <h5 class="font-bold text-lg p-5">Détails de {{itemSelected.label}}</h5>
+                                    <div class="p-5">
+                                        <div class="table-responsive">
+                                            <table class="table-hover">
+                                                <tbody>
+                                                    <tr>
+                                                        <th>N° Immatriculation</th>
+                                                        <td>{{itemSelected.license_plate}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Marque</th>
+                                                        <td>{{itemSelected.brand_label}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Modèle</th>
+                                                        <td>{{itemSelected.model}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Type</th>
+                                                        <td>{{itemSelected.type}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Option</th>
+                                                        <td>{{itemSelected.option}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Couleur</th>
+                                                        <td>{{itemSelected.color_label}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Kilométrage</th>
+                                                        <td>{{itemSelected.mileage}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Statut</th>
+                                                        <td>
+                                                            <span class="badge badge-outline-success" *ngIf="itemSelected.status_id == 1">{{itemSelected.status_label}}</span>
+                                                            <span class="badge badge-outline-danger" *ngIf="itemSelected.status_id == 2">{{itemSelected.status_label}}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Ajouté(e) par</th>
+                                                        <td>{{itemSelected.user_last_name}} {{itemSelected.user_first_name}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Date de création</th>
+                                                        <td>{{itemSelected.created_at | date: 'dd/MM/yyyy'}} à {{ itemSelected.created_at | date: 'HH:mm:ss' }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="flex justify-end items-center mt-8">
+                                                <button type="button" (click)="itemSelected = !itemSelected" class="btn btn-outline-danger">Fermer</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-5" *ngIf="itemSelected && ableItem">
+                    <div class="row mb-5">
+                        <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="open && '!block'">
+                            <div class="flex items-start justify-center min-h-screen px-4">
+                                <div x-show="open" x-transition x-transition.duration.300 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-5xl my-8">
+                                    <h5 class="font-bold text-lg p-5">Activation de {{itemSelected.label}}</h5>
+                                    <div class="p-5">
+                                        <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngFor="let item of error_message; let i = index;">
+                                            <span *ngIf="error_message.length > 0" class="ltr:pr-2 rtl:pl-2">{{item.detail}}</span><br>
+                                        </div>
+                                        <div class="flex justify-center items-center mt-8">
+                                            Voulez-vous activer &nbsp; <b>{{itemSelected.label}}</b> &nbsp; ?
+                                        </div>
+                                        <div class="flex justify-end items-center mt-8">
+                                            <button type="button" (click)="resetAll(); itemSelected = !itemSelected" class="btn btn-outline-danger">Non</button>
+                                            <button type="submit" (click)="enable()" [disabled]="submit" *ngIf="!submit" class="btn btn-primary ltr:ml-4 rtl:mr-4">Oui</button>
+                                            <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submit" *ngIf="submit">
+                                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+                                                    <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                    <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                    <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                    <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                    <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                    <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                    <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                    <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                </svg>
+                                                Patientez ...
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-5" *ngIf="itemSelected && disableItem">
+                    <div class="row mb-5">
+                        <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="open && '!block'">
+                            <div class="flex items-start justify-center min-h-screen px-4">
+                                <div x-show="open" x-transition x-transition.duration.300 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-5xl my-8">
+                                    <h5 class="font-bold text-lg p-5">Désactivation de {{itemSelected.label}}</h5>
+                                    <div class="p-5">
+                                        <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngFor="let item of error_message; let i = index;">
+                                            <span *ngIf="error_message.length > 0" class="ltr:pr-2 rtl:pl-2">{{item.detail}}</span><br>
+                                        </div>
+                                        <div class="flex justify-center items-center mt-8">
+                                            Voulez-vous désactiver &nbsp; <b>{{itemSelected.label}}</b> &nbsp; ?
+                                        </div>
+                                        <div class="flex justify-end items-center mt-8">
+                                            <button type="button" (click)="resetAll(); itemSelected = !itemSelected" class="btn btn-outline-danger">Non</button>
+                                            <button type="submit" (click)="disable()" [disabled]="submit" *ngIf="!submit" class="btn btn-primary ltr:ml-4 rtl:mr-4">Oui</button>
+                                            <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submit" *ngIf="submit">
+                                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+                                                    <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                    <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                    <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                    <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                    <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                    <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                    <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                    <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                </svg>
+                                                Patientez ...
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <app-preloader></app-preloader>
+            </div>
+        </div>
+    </div>
+</div>

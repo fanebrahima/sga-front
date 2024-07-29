@@ -1,0 +1,184 @@
+<header :class="{'dark' : $store.app.semidark && $store.app.menu === 'horizontal'}" *ngIf="user_logged">
+    <div class="shadow-sm">
+        <!-- <div class="relative bg-white flex w-full items-center px-5 py-2.5 dark:bg-[#0e1726]">
+            <div class="horizontal-logo flex lg:hidden justify-between items-center ltr:mr-2 rtl:ml-2">
+                <a href="index.html" class="main-logo flex items-center shrink-0">
+                    <img class="w-8 ltr:-ml-1 rtl:-mr-1 inline" src="assets/images/logo-icon.svg" alt="image" />
+                    <span
+                        class="text-2xl ltr:ml-1.5 rtl:mr-1.5  font-semibold  align-middle hidden md:inline dark:text-white-light transition-all duration-300">eAtCI
+                        v2.1</span>
+                </a>
+
+                <a href="javascript:;"
+                    class="collapse-icon flex-none dark:text-[#d0d2d6] hover:text-primary dark:hover:text-primary flex lg:hidden ltr:ml-2 rtl:mr-2 p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:bg-white-light/90 dark:hover:bg-dark/60"
+                    (click)="sidebarToggle()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 7L4 7" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" />
+                        <path opacity="0.5" d="M20 12L4 12" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" />
+                        <path d="M20 17L4 17" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" />
+                    </svg>
+                </a>
+            </div>
+            <div class="ltr:mr-2 rtl:ml-2 hidden sm:block">
+
+            </div>
+            <div
+                class="sm:flex-1 ltr:sm:ml-0 ltr:ml-auto sm:rtl:mr-0 rtl:mr-auto flex items-center space-x-1.5 lg:space-x-2 rtl:space-x-reverse dark:text-[#d0d2d6]" *ngIf="user_logged">
+                <div class="sm:ltr:mr-auto sm:rtl:ml-auto" style="padding-left: 10%; width: 100%;" x-data="{ search: false }">
+                    <h2>{{user_logged.entityfirm_id.name}} | {{user_logged.lastname}} {{user_logged.firstname}} | {{user_logged.userprofile_id.name}}</h2>
+                </div>
+
+                <div class="dropdown flex-shrink-0" x-data="dropdown" (click)="open = !open">
+                    <a href="javascript:;" class="relative group">
+                        <span><img
+                                class="w-9 h-9 rounded-full object-cover saturate-50 group-hover:saturate-100"
+                                src="{{user_logged.avatar}}" alt="image" /></span>
+                    </a>
+                    <ul [attr.x-show]="open" x-transition x-transition.duration.300ms
+                        class="ltr:right-0 rtl:left-0 text-dark dark:text-white-dark top-11 !py-0 w-[230px] font-semibold dark:text-white-light/90">
+                        <li>
+                            <div class="flex items-center px-2 py-2">
+                                <div class="flex-none">
+                                    <img class="rounded-md w-10 h-10 object-cover"
+                                        src="{{user_logged.avatar}}" alt="image" />
+                                </div>
+                                <div class="ltr:pl-4 rtl:pr-4">
+                                    <h6 style="font-size: 15px;">
+                                        {{user_logged.lastname}}
+                                        <br>
+                                        {{user_logged.firstname}}
+                                    </h6>
+                                    <a class="text-black/60  hover:text-primary dark:text-dark-light/60 dark:hover:text-white"
+                                        href="javascript:;" style="font-size: 10px;">
+                                        {{user_logged.email}}
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <a routerLink="/profile" class="dark:hover:text-white">
+                                <svg class="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2" width="18" height="18"
+                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="6" r="4" stroke="currentColor" stroke-width="1.5" />
+                                    <path opacity="0.5"
+                                        d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"
+                                        stroke="currentColor" stroke-width="1.5" />
+                                </svg>
+                                Profil</a>
+                        </li>
+                        <li class="border-t border-white-light dark:border-white-light/10">
+                            <button (click)="logout()" class=" text-danger !py-3">
+                                <svg class="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 rotate-90" width="18" height="18"
+                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.5"
+                                        d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                    <path d="M12 15L12 2M12 2L15 5.5M12 2L9 5.5" stroke="currentColor"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                Déconnexion
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div> -->
+        <div class="relative bg-white flex w-full items-center px-5 py-2.5 dark:bg-[#0e1726]" style="background-color: rgb(255, 255, 255);">
+            <div class="horizontal-logo flex lg:hidden justify-between items-center ltr:mr-2 rtl:ml-2">
+                <a routerLink="/" class="main-logo flex items-center shrink-0">
+                    <img class="flex-none" src="assets/images/logo_eg.jpg" width="50px;" alt="logo" />
+                </a>
+
+                <a href="javascript:;"
+                    class="collapse-icon flex-none dark:text-[#d0d2d6] hover:text-primary dark:hover:text-primary flex lg:hidden ltr:ml-2 rtl:mr-2 p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:bg-white-light/90 dark:hover:bg-dark/60"
+                    (click)="sidebarToggle()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 7L4 7" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" />
+                        <path opacity="0.5" d="M20 12L4 12" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" />
+                        <path d="M20 17L4 17" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" />
+                    </svg>
+                </a>
+            </div>
+            <div class="ltr:mr-2 rtl:ml-2 hidden sm:block">
+
+            </div>
+            <div
+                class="sm:flex-1 ltr:sm:ml-0 ltr:ml-auto sm:rtl:mr-0 rtl:mr-auto flex items-center space-x-1.5 lg:space-x-2 rtl:space-x-reverse dark:text-[#d0d2d6]" *ngIf="user_logged">
+                <div class="sm:ltr:mr-auto sm:rtl:ml-auto" style="padding-left: 10%; width: 100%;" x-data="{ search: false }">
+                </div>
+
+                <div class="dropdown flex-shrink-0" x-data="dropdown" (click)="open = !open">
+                    <a href="javascript:;" class="relative group">
+                        <span><img
+                                class="w-9 h-9 rounded-full object-cover saturate-50 group-hover:saturate-100"
+                                src="assets/images/avatar.png" alt="image" /></span>
+                    </a>
+                    <ul [attr.x-show]="open" x-transition x-transition.duration.300ms
+                        class="ltr:right-0 rtl:left-0 text-dark dark:text-white-dark top-11 !py-0 w-[230px] font-semibold dark:text-white-light/90">
+                        <li>
+                            <div class="flex items-center px-2 py-2">
+                                <div class="flex-none">
+                                    <img class="rounded-md w-10 h-10 object-cover"
+                                        src="assets/images/avatar.png" alt="image" />
+                                </div>
+                                <div class="ltr:pl-4 rtl:pr-4">
+                                    <h6 style="font-size: 12px;">
+                                        {{user_logged.last_name}}
+                                        <br>
+                                        {{user_logged.first_name}}
+                                    </h6>
+                                    <a class="text-black/60  hover:text-primary dark:text-dark-light/60 dark:hover:text-white"
+                                        href="javascript:;" style="font-size: 10px;">
+                                        {{user_logged.email}}
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <a routerLink="/user-profile" class="dark:hover:text-white">
+                                <svg class="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2" width="18" height="18"
+                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="6" r="4" stroke="currentColor" stroke-width="1.5" />
+                                    <path opacity="0.5"
+                                        d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"
+                                        stroke="currentColor" stroke-width="1.5" />
+                                </svg>
+                                Profil</a>
+                        </li>
+                        <li class="border-t border-white-light dark:border-white-light/10">
+                            <button (click)="logout()" class=" text-danger !py-3">
+                                <svg class="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 rotate-90" width="18" height="18"
+                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.5"
+                                        d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                    <path d="M12 15L12 2M12 2L15 5.5M12 2L9 5.5" stroke="currentColor"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                Déconnexion
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<app-preloader></app-preloader>
+
+
+<!-- <div class="grid p-5">
+    <div class="grid sm:grid-cols-1 xl:grid-cols-1 gap-1">
+        <div class="panel h-full">
+                 <h1 style="font-size: 20px;">Bonjour <b>{{user_logged.lastname}} {{user_logged.firstname}} | {{user_logged.userprofile_id.name}} | {{user_logged.entityfirm_id.name}}</b></h1>
+        </div>
+    </div>
+</div> -->

@@ -1,0 +1,30 @@
+export class Assignment {
+    id?:number;
+    uuid!: string;
+    client_first_name!: string;
+    client_last_name!: string;
+    client_phone!: string;
+    policy_number!: string;
+    disaster_number!: string;
+    disaster_date!: Date;
+    expertise_date!: Date;
+    expertise_address!: string;
+    car_immatriculation!: string;
+    car_brand!: string;
+    car_model!: string;
+    car_color!: string;
+    car_nb_place!: number;
+    car_fiscal_powerful!: number;
+    car_energy!: string;
+    car_serial_number!: string;
+    car_gender!: string;
+    car_km_comptor!: string;
+    car_general_state!: string;
+    car_new_value!: string;
+    car_depreciation!: string;
+    car_market_value!: string;
+    car_first_circulation_date!: Date;
+    pictures!: string;
+    partner_id!: number;
+    status_id!:string;
+}

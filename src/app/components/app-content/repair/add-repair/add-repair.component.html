@@ -1,0 +1,1057 @@
+<app-sidebar></app-sidebar>
+<div class="main-content">
+    <app-header></app-header>
+    <div>
+        <div class="p-5">
+            <div class="p-6 animate__animated" :class="[$store.app.animation]">
+                <div x-data="sales">
+                    <ul class="flex space-x-2 rtl:space-x-reverse">
+                        <li>
+                            <a href="javascript:;" class="text-primary hover:underline">Réparations</a>
+                        </li>
+                        <li class="before:content-['/'] ltr:before:mr-1 rtl:before:ml-1">
+                            <span>Ajout d'une réparation</span>
+                        </li>
+                    </ul>
+                    <div class="pt-5">
+                        <div class="row mb-5">
+                            <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="open && '!block'">
+                                <div class="flex items-start justify-center min-h-screen px-4">
+                                    <div x-show="open" x-transition x-transition.duration.300 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-5xl my-8">
+                                        <h5 class="font-bold text-lg p-5">Ajout d'une réparation</h5>
+                                        <div class="p-5">
+                                            <form class="space-y-5" style="padding-bottom: 100px;">
+                                                <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="error_message">
+                                                    <span class="ltr:pr-2 rtl:pl-2">{{error_message}}</span><br>
+                                                </div>
+                                                <div class="row" [hidden]="!step1">
+
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">1/8 - Choix du réparateur</h5>
+
+                                                    <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
+                                                        <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
+                                                            <div class="h-4 rounded-full w-0/12 text-center text-white text-xs">0%</div>
+                                                        </div>
+                                                        <br>
+                                                        <!-- <div class="NgxEditor__Wrapper">
+                                                            <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+                                                            <ngx-editor [editor]="editor" [ngModel]="html" [disabled]="false" [placeholder]="'Type here...'"></ngx-editor>
+                                                        </div> -->
+
+                                                        <div class="mb-3">
+                                                            <label>Réparateur</label>
+                                                            <ng-select class="form-control" (change)="changeRepairer(repairer_id)" id="repairer_id" [(ngModel)]="repairer_id" name="repairer_id" autocomplete="repairer_id" autofocus>
+                                                                <ng-option *ngFor="let item of listRepairer" [value]="item.id">{{item.name}}</ng-option>
+                                                             </ng-select>
+                                                        </div>
+
+                                                        <div class="mb-3" [formGroup]="formGroupStep1">
+                                                            <label>Nom du réparateur <span style="color:red">*</span></label>
+                                                            <input type="text" class="form-input" formControlName="name" [ngClass]="{ 'is-invalid': submitted && fStep1['name'].errors }"
+                                                                name="name" [(ngModel)]="name" />
+                                                            <div *ngIf="submittedStep1 && fStep1['name'].errors" class="mt-1">
+                                                                <div *ngIf="submittedStep1 && fStep1['name'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label>Adresse email du réparateur</label>
+                                                            <input type="text" class="form-input" name="email" [(ngModel)]="email" />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label>Contact du réparateur</label>
+                                                            <input type="text" class="form-input" name="phone" [(ngModel)]="phone" />
+                                                        </div>
+
+                                                        <div class="flex justify-center items-center">
+                                                            <button class="btn btn-outline-danger ltr:ml-4 rtl:mr-4">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+                                                                </svg>
+                                                                &nbsp;
+                                                                Précédent
+                                                            </button>
+                                                            <button class="btn btn-outline-success ltr:ml-4 rtl:mr-4" (click)="validateStep1()">
+                                                                Suivant
+                                                                &nbsp;
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="row" [hidden]="!step2">
+
+                                                  <h5 class="font-bold text-lg p-5 flex justify-center items-center">2/8 - Choix du client</h5>
+
+                                                  <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
+                                                      <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
+                                                          <div class="h-4 rounded-full w-1/12 text-center text-white text-xs">10%</div>
+                                                      </div>
+                                                      <br>
+                                                      <!-- <div class="NgxEditor__Wrapper">
+                                                          <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+                                                          <ngx-editor [editor]="editor" [ngModel]="html" [disabled]="false" [placeholder]="'Type here...'"></ngx-editor>
+                                                      </div> -->
+
+                                                      <div class="mb-3">
+                                                          <label>Client</label>
+                                                          <ng-select class="form-control" (change)="changeClient(client_id)" id="client_id" [(ngModel)]="client_id" name="client_id" autocomplete="client_id" autofocus>
+                                                              <ng-option *ngFor="let item of listClient" [value]="item.id">{{item.name}}</ng-option>
+                                                           </ng-select>
+                                                      </div>
+
+                                                      <div class="mb-3" [formGroup]="formGroupStep2">
+                                                          <label>Nom du client <span style="color:red">*</span></label>
+                                                          <input type="text" class="form-input" formControlName="client_name" [ngClass]="{ 'is-invalid': submitted && fStep2['client_name'].errors }"
+                                                              name="client_name" [(ngModel)]="client_name" />
+                                                          <div *ngIf="submittedStep2 && fStep2['client_name'].errors" class="mt-1">
+                                                              <div *ngIf="submittedStep2 && fStep2['client_name'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                          </div>
+                                                      </div>
+                                                      <div class="mb-3">
+                                                          <label>Adresse email du client</label>
+                                                          <input type="text" class="form-input" name="client_email" [(ngModel)]="client_email" />
+                                                      </div>
+                                                      <div class="mb-3">
+                                                          <label>Contact du client</label>
+                                                          <input type="text" class="form-input" name="client_phone" [(ngModel)]="client_phone" />
+                                                      </div>
+
+                                                      <div class="flex justify-center items-center">
+                                                          <button class="btn btn-outline-danger ltr:ml-4 rtl:mr-4" (click)="step1 = !step1; step2 = !step2;">
+                                                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+                                                              </svg>
+                                                              &nbsp;
+                                                              Précédent
+                                                          </button>
+                                                          <button class="btn btn-outline-success ltr:ml-4 rtl:mr-4" (click)="validateStep2()">
+                                                              Suivant
+                                                              &nbsp;
+                                                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                                                              </svg>
+                                                          </button>
+                                                      </div>
+
+                                                  </div>
+
+                                              </div>
+                                                <div class="row" [hidden]="!step3">
+
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">3/8 - Choix du véhicule</h5>
+
+                                                    <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
+                                                        <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
+                                                            <div class="bg-success  h-4 rounded-full w-2/12 text-center text-white text-xs">20%</div>
+                                                        </div>
+                                                        <br>
+
+                                                        <div class="mb-3">
+                                                            <label>Véhicule</label>
+                                                            <ng-select class="form-control" (change)="changeVehicle(vehicle_id)" id="vehicle_id" [(ngModel)]="vehicle_id" name="vehicle_id" autocomplete="vehicle_id" autofocus>
+                                                                <ng-option *ngFor="let item of listVehicle" [value]="item.id">{{ item.license_plate }}</ng-option>
+                                                             </ng-select>
+                                                        </div>
+
+                                                        <div class="mb-3" [formGroup]="formGroupStep3">
+                                                            <label>N° Immatriculation <span style="color:red">*</span></label>
+                                                            <input type="text" class="form-input" formControlName="license_plate" [ngClass]="{ 'is-invalid': submitted && fStep3['license_plate'].errors }"
+                                                                name="license_plate" [(ngModel)]="license_plate" />
+                                                            <div *ngIf="submittedStep3 && fStep3['license_plate'].errors" class="mt-1">
+                                                                <div *ngIf="submittedStep3 && fStep3['license_plate'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- <div class="mb-3">
+                                                            <label>Marque <span style="color:red">*</span></label>
+                                                            <input type="text" class="form-input" name="brand" [(ngModel)]="brand" />
+                                                        </div> -->
+                                                        <div class="mb-3">
+                                                            <label>Marque</label>
+                                                            <ng-select class="form-control" (change)="changeBrand(brand_id)" id="brand_id" [(ngModel)]="brand_id" name="brand_id" autocomplete="brand_id" autofocus>
+                                                                <ng-option *ngFor="let item of listBrand" [value]="item.id">{{ item.label }}</ng-option>
+                                                             </ng-select>
+                                                        </div>
+                                                        <div class="mb-3" [formGroup]="formGroupStep3">
+                                                            <label>Libellé de la marque <span style="color:red">*</span></label>
+                                                            <input type="text" class="form-input" name="brand" [(ngModel)]="brand" formControlName="brand" [ngClass]="{ 'is-invalid': submitted && fStep3['brand'].errors }" />
+                                                            <div *ngIf="submittedStep3 && fStep3['color'].errors" class="mt-1">
+                                                                <div *ngIf="submittedStep3 && fStep3['color'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-3" [formGroup]="formGroupStep3">
+                                                            <label>Modèle <span style="color:red">*</span></label>
+                                                            <input type="text" class="form-input" name="model" [(ngModel)]="model" formControlName="model" [ngClass]="{ 'is-invalid': submitted && fStep3['model'].errors }"  />
+                                                            <div *ngIf="submittedStep3 && fStep3['color'].errors" class="mt-1">
+                                                                <div *ngIf="submittedStep3 && fStep3['color'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label>Type</label>
+                                                            <input type="text" class="form-input" name="type" [(ngModel)]="type" />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label>Option</label>
+                                                            <input type="text" class="form-input" name="option" [(ngModel)]="option" />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label>Couleur</label>
+                                                            <ng-select class="form-control" (change)="changeColor(color_id)" id="color_id" [(ngModel)]="color_id" name="color_id" autocomplete="color_id" autofocus>
+                                                                <ng-option *ngFor="let item of listColor" [value]="item.id">{{ item.label }}</ng-option>
+                                                             </ng-select>
+                                                        </div>
+                                                        <div class="mb-3" [formGroup]="formGroupStep3">
+                                                            <label>Libellé de la couleur <span style="color:red">*</span></label>
+                                                            <input type="text" class="form-input" name="color" [(ngModel)]="color" formControlName="color" [ngClass]="{ 'is-invalid': submitted && fStep3['color'].errors }"/>
+                                                            <div *ngIf="submittedStep3 && fStep3['color'].errors" class="mt-1">
+                                                                <div *ngIf="submittedStep3 && fStep3['color'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- <div class="mb-3">
+                                                            <label>Couleur <span style="color:red">*</span></label>
+                                                            <input type="text" class="form-input" name="color" [(ngModel)]="color" />
+                                                        </div> -->
+                                                        <div class="mb-3">
+                                                            <label>Kilométrage</label>
+                                                            <input type="number" min="0" class="form-input" name="mileage" [(ngModel)]="mileage" />
+                                                        </div>
+
+                                                        <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist_vehicle">
+                                                            <span class="ltr:pr-2 rtl:pl-2">Ce véhicule existe déja, veuillez le sélectionner dans la liste des véhicules !</span><br>
+                                                        </div>
+
+                                                        <div class="flex justify-center items-center">
+                                                            <button class="btn btn-outline-danger ltr:ml-4 rtl:mr-4" (click)="step2 = !step2; step3 = !step3;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+                                                                </svg>
+                                                                &nbsp;
+                                                                Précédent
+                                                            </button>
+                                                            <button class="btn btn-outline-success ltr:ml-4 rtl:mr-4" (click)="validateStep3();" *ngIf="!submitVehicle">
+                                                                Suivant
+                                                                &nbsp;
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                                                                </svg>
+                                                            </button>
+                                                            <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submitVehicle" *ngIf="submitVehicle">
+                                                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+                                                                    <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                                    <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                                    <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                                    <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                                    <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                                    <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                                    <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                                    <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                                </svg>
+                                                                Patientez ...
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="row" [hidden]="!step4">
+
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">4/8 - Point de choc</h5>
+
+                                                    <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
+                                                        <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
+                                                            <div class="bg-success  h-4 rounded-full w-4/12 text-center text-white text-xs">40%</div>
+                                                        </div>
+                                                        <br>
+                                                        <div class="mb-3">
+                                                            <label>Point de choc</label>
+                                                            <ng-select class="form-control" (change)="changeShockPoint(shock_point_id)" id="shock_point_id" [(ngModel)]="shock_point_id" name="shock_point_id" autocomplete="shock_point_id" autofocus>
+                                                                <ng-option *ngFor="let item of listShockPoint" [value]="item.id">{{ item.label }}</ng-option>
+                                                             </ng-select>
+                                                        </div>
+
+                                                        <div class="mb-3" [formGroup]="formGroupStep4">
+                                                            <label>Libellé <span style="color:red">*</span></label>
+                                                            <input type="text" class="form-input" formControlName="shock_point_label" [ngClass]="{ 'is-invalid': submittedStep4 && fStep4['shock_point_label'].errors }"
+                                                                name="shock_point_label" [(ngModel)]="shock_point_label" />
+                                                            <div *ngIf="submittedStep4 && fStep4['shock_point_label'].errors" class="mt-1">
+                                                                <div *ngIf="submittedStep4 && fStep4['shock_point_label'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="flex justify-center items-center">
+                                                            <button class="btn btn-outline-danger ltr:ml-4 rtl:mr-4" (click)="step3 = !step3; step4 = !step4;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+                                                                </svg>
+                                                                &nbsp;
+                                                                Précédent
+                                                            </button>
+                                                            <button class="btn btn-outline-success ltr:ml-4 rtl:mr-4" (click)="validateStep4();">
+                                                                Suivant
+                                                                &nbsp;
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="row" [hidden]="!step5">
+
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">5/8 - Travaux à faire</h5>
+
+                                                    <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
+                                                        <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
+                                                            <div class="bg-success  h-4 rounded-full w-6/12 text-center text-white text-xs">50%</div>
+                                                        </div>
+                                                        <br>
+
+                                                        <div class="flex items-center justify-between flex-wrap gap-4" *ngIf="!removeWork">
+                                                            <h2 class="text-xl"> </h2>
+                                                            <div class="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
+                                                                <div class="flex gap-3">
+                                                                    <div class="relative ">
+
+                                                                    </div>
+                                                                    <div>
+                                                                        <button type="button" class="btn btn-primary" (click)="addWork = !addWork">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                                                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                                                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                                            </svg>
+                                                                            Ajouter un travail
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist_work_error">
+                                                            <span class="ltr:pr-2 rtl:pl-2">Veuillez renseigner au moins un travail !</span><br>
+                                                        </div>
+
+                                                        <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist">
+                                                            <span class="ltr:pr-2 rtl:pl-2"><b>{{label}}</b> Déjà utilisée !</span><br>
+                                                        </div>
+
+                                                        <form class="space-y-5" style="padding-bottom: 10px;" *ngIf="addWork">
+                                                            <div class="grid grid-cols-1 grid-cols-1 gap-1">
+                                                                <div class="mb-3">
+                                                                    <label>Désignation</label>
+                                                                    <ng-select class="form-control" (change)="changeDesignation(designation_id)" id="designation_id" [(ngModel)]="designation_id" name="designation_id" autocomplete="designation_id" autofocus>
+                                                                        <ng-option *ngFor="let item of listDesignation" [value]="item.id">{{ item.label }}</ng-option>
+                                                                     </ng-select>
+                                                                </div>
+
+                                                                <div class="mb-3" [formGroup]="designationFormGroup">
+                                                                    <label>Libellé <span style="color:red">*</span></label>
+                                                                    <input type="text" class="form-input" formControlName="label" [ngClass]="{ 'is-invalid': submitted && fWork['label'].errors }"
+                                                                        name="label" [(ngModel)]="label" />
+                                                                    <div *ngIf="submittedWork && fWork['label'].errors" class="mt-1">
+                                                                        <div *ngIf="submittedWork && fWork['label'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="grid grid-cols-1 grid-cols-4 gap-4">
+                                                                <div>
+                                                                    <label for="">Remplacement</label>
+                                                                    <label class="w-12 h-6 relative" *ngIf="replacement == 0">
+                                                                        <input type="checkbox" (change)="changeReplacement($event)" id="replacement" name="replacement" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                    </label>
+                                                                    <label class="w-12 h-6 relative" *ngIf="replacement == 1">
+                                                                        <input type="checkbox" (change)="changeReplacement($event)" id="replacement" name="replacement" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" checked/>
+                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                    </label>
+                                                                </div>
+                                                                <div>
+                                                                    <label for="">Réparation</label>
+                                                                    <label class="w-12 h-6 relative" *ngIf="repair == 0">
+                                                                        <input type="checkbox" (change)="changeRepair($event)" id="repair" name="repair" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                    </label>
+                                                                    <label class="w-12 h-6 relative" *ngIf="repair == 1">
+                                                                        <input type="checkbox" (change)="changeRepair($event)" id="repair" name="repair" value="0" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" checked/>
+                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                    </label>
+                                                                </div>
+                                                                <div>
+                                                                    <label for="">Peinture</label>
+                                                                    <label class="w-12 h-6 relative" *ngIf="paint == 0">
+                                                                        <input type="checkbox" (change)="changePaint($event)" id="paint" name="paint" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                    </label>
+                                                                    <label class="w-12 h-6 relative" *ngIf="paint == 1">
+                                                                        <input type="checkbox" (change)="changePaint($event)" id="paint" name="paint" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" checked/>
+                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                    </label>
+                                                                </div>
+                                                                <div>
+                                                                    <label for="">Contrôle</label>
+                                                                    <label class="w-12 h-6 relative" *ngIf="control == 0">
+                                                                        <input type="checkbox" (change)="changePlace($event)" id="control" name="control" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                    </label>
+                                                                    <label class="w-12 h-6 relative" *ngIf="control == 1">
+                                                                        <input type="checkbox" (change)="changePlace($event)" id="control" name="control" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                    </label>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="flex justify-end items-center mt-8">
+                                                                <button type="button" class="btn btn-outline-danger" (click)="addWork = !addWork">Annuler</button>
+                                                                <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submitAddWork" *ngIf="!submitAddWork" (click)="saveWork();">Ajouter</button>
+                                                                <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submitAddWork" *ngIf="submitAddWork">
+                                                                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+                                                                        <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                                        <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                                        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                                        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                                        <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                                        <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                                        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                                        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                                    </svg>
+                                                                    Patientez ...
+                                                                </button>
+                                                            </div>
+                                                        </form>
+
+                                                        <form class="space-y-5" style="padding-bottom: 10px;" *ngIf="removeWork && designationSelected">
+
+                                                            <div class="flex justify-center items-center">
+                                                                <h3>Voulez-vous supprimer <b>{{designationSelected.designation_label}}</b> ?</h3>
+                                                            </div>
+
+                                                            <div class="flex justify-end items-center mt-8">
+                                                                <button type="button" class="btn btn-outline-danger" (click)="removeWork = !removeWork">Annuler</button>
+                                                                <button type="submit" class="btn btn-danger ltr:ml-4 rtl:mr-4" (click)="deleteItem();" [disabled]="submitRemoveWork" *ngIf="!submitRemoveWork">Supprimer</button>
+                                                                <button type="button" class="btn btn-danger ltr:ml-4 rtl:mr-4" [disabled]="submitRemoveWork" *ngIf="submitRemoveWork">
+                                                                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+                                                                        <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                                        <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                                        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                                        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                                        <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                                        <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                                        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                                        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                                    </svg>
+                                                                    Patientez ...
+                                                                </button>
+                                                            </div>
+                                                        </form>
+
+                                                        <div class="table-responsive">
+                                                            <table class="table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col">N°</th>
+                                                                        <th scope="col">DESIGNATION</th>
+                                                                        <th scope="col">REMPLACEMENT</th>
+                                                                        <th scope="col">REPARATION</th>
+                                                                        <th scope="col">PEINDRE</th>
+                                                                        <th scope="col">CONTRÔLE</th>
+                                                                        <th>Actions</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody *ngIf="works.length > 0">
+                                                                    <tr *ngFor="let item of works; let i = index">
+                                                                        <th scope="row">{{ i+1 }}</th>
+                                                                        <td>{{ item.designation_label }}</td>
+                                                                        <td>
+                                                                            <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.replacement == 1"></i>
+                                                                        </td>
+                                                                        <td>
+                                                                            <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.repair == 1"></i>
+                                                                        </td>
+                                                                        <td>
+                                                                            <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.paint == 1"></i>
+                                                                        </td>
+                                                                        <td>
+                                                                            <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.control == 1"></i>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" href="#" (click)="itemClick(item); removeWork = !removeWork; addWork = false;" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <h1 *ngIf="works.length <= 0" class="text-center items-center p-2">Aucune donnée à afficher</h1>
+                                                        </div>
+
+                                                        <div class="flex justify-center items-center">
+                                                            <button class="btn btn-outline-danger ltr:ml-4 rtl:mr-4" (click)="step4 = !step4; step5 = !step5;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+                                                                </svg>
+                                                                &nbsp;
+                                                                Précédent
+                                                            </button>
+                                                            <button class="btn btn-outline-success ltr:ml-4 rtl:mr-4" (click)="validateStep5();">
+                                                                Suivant
+                                                                &nbsp;
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="row" [hidden]="!step6">
+
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">6/8 - Note d'expert</h5>
+
+                                                    <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
+                                                        <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
+                                                            <div class="bg-success  h-4 rounded-full w-10/12 text-center text-white text-xs">80%</div>
+                                                        </div>
+                                                        <br>
+
+                                                        <div class="mb-3">
+                                                            <label>Choisir une note d'expert</label>
+                                                            <ng-select class="form-control" (change)="changeRemark(remark)" id="remark" [(ngModel)]="remark" name="remark" autocomplete="remark" autofocus>
+                                                                <ng-option *ngFor="let item of listRemark" [value]="item.remark">{{item.remark}}</ng-option>
+                                                             </ng-select>
+                                                        </div>
+
+                                                        <div class="mb-3" [formGroup]="formGroupStep6">
+                                                            <label>Note d'expert <span style="color:red">*</span></label>
+                                                            <textarea class="form-textarea min-h-[100px]" formControlName="remark" [ngClass]="{ 'is-invalid': submitted && fStep6['remark'].errors }"
+                                                            name="remark" [(ngModel)]="remark"></textarea>
+                                                            <!-- <input type="text" class="form-input" formControlName="remark" [ngClass]="{ 'is-invalid': submitted && f['remark'].errors }"
+                                                                name="remark" [(ngModel)]="remark" /> -->
+                                                            <div *ngIf="submittedStep6 && fStep6['remark'].errors" class="mt-1">
+                                                                <div *ngIf="submittedStep6 && fStep6['remark'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- <div class="mb-3">
+                                                            <label>Adresse e-mail de l'expert</label>
+                                                            <input type="text" class="form-input" name="expert_email" [(ngModel)]="expert_email"/>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label>Adresse e-mail du réparateur</label>
+                                                            <input type="text" class="form-input" name="repairer_email" [(ngModel)]="repairer_email"/>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label>Adresse e-mail du client</label>
+                                                            <input type="text" class="form-input" name="customer_email" [(ngModel)]="customer_email"/>
+                                                        </div> -->
+
+                                                        <div class="flex justify-center items-center">
+                                                            <button class="btn btn-outline-danger ltr:ml-4 rtl:mr-4" (click)="step5 = !step5; step6 = !step6;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+                                                                </svg>
+                                                                &nbsp;
+                                                                Précédent
+                                                            </button>
+                                                            <button class="btn btn-outline-success ltr:ml-4 rtl:mr-4" (click)="validateStep6();">
+                                                                Suivant
+                                                                &nbsp;
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="row" [hidden]="!step7">
+
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">7/8 - Adresses E-mail</h5>
+
+                                                    <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
+                                                        <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
+                                                            <div class="bg-success  h-4 rounded-full w-11/12 text-center text-white text-xs">90%</div>
+                                                        </div>
+                                                        <br>
+
+                                                        <div class="flex items-center justify-between flex-wrap gap-4" *ngIf="!removeEmail">
+                                                            <h2 class="text-xl"> </h2>
+                                                            <div class="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
+                                                                <div class="flex gap-3">
+                                                                    <div class="relative ">
+
+                                                                    </div>
+                                                                    <div>
+                                                                        <button type="button" class="btn btn-primary" (click)="addEmail = !addEmail">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                                                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                                                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                                            </svg>
+                                                                            Ajouter une adresse e-mail
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist_email_error">
+                                                            <span class="ltr:pr-2 rtl:pl-2">Veuillez renseigner au moins une adresse e-mail pour l'envoi de la fiche !</span><br>
+                                                        </div>
+
+                                                        <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist_signature_error">
+                                                            <span class="ltr:pr-2 rtl:pl-2">Veuillez signer pour l'envoi de la fiche !</span><br>
+                                                        </div>
+
+                                                        <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="existEmail">
+                                                            <span class="ltr:pr-2 rtl:pl-2"><b>{{label}}</b> Déjà utilisée !</span><br>
+                                                        </div>
+
+                                                        <form class="space-y-5" style="padding-bottom: 10px;" *ngIf="addEmail">
+
+                                                            <div class="grid grid-cols-1 grid-cols-1 gap-1">
+                                                                <div class="mb-3" [formGroup]="emailFormGroup">
+                                                                    <label>Adresse e-mail <span style="color:red;">*</span></label>
+                                                                    <input type="email" class="form-input" formControlName="insurer_email" [ngClass]="{ 'is-invalid': submitted && fEmail['insurer_email'].errors }"
+                                                                        name="insurer_email" [(ngModel)]="insurer_email" />
+                                                                    <div *ngIf="submittedEmail && fEmail['insurer_email'].errors" class="mt-1">
+                                                                        <div *ngIf="submittedEmail && fEmail['insurer_email'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="flex justify-end items-center mt-8">
+                                                                <button type="button" class="btn btn-outline-danger" (click)="addEmail = !addEmail">Annuler</button>
+                                                                <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submitAddEmail" *ngIf="!submitAddEmail" (click)="saveEmail();">Ajouter</button>
+                                                                <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submitAddEmail" *ngIf="submitAddEmail">
+                                                                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+                                                                        <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                                        <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                                        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                                        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                                        <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                                        <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                                        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                                        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                                    </svg>
+                                                                    Patientez ...
+                                                                </button>
+                                                            </div>
+                                                        </form>
+
+                                                        <form class="space-y-5" style="padding-bottom: 10px;" *ngIf="removeEmail && emailSelected">
+
+                                                            <div class="flex justify-center items-center mt-8">
+                                                                <h3>Voulez-vous supprimer <b>{{emailSelected.email}}</b> ?</h3>
+                                                            </div>
+
+                                                            <div class="flex justify-end items-center mt-8">
+                                                                <button type="button" class="btn btn-outline-danger" (click)="removeEmail = !removeEmail">Annuler</button>
+                                                                <button type="submit" class="btn btn-danger ltr:ml-4 rtl:mr-4" (click)="deleteEmail();" [disabled]="submitRemoveEmail" *ngIf="!submitRemoveEmail">Supprimer</button>
+                                                                <button type="button" class="btn btn-danger ltr:ml-4 rtl:mr-4" [disabled]="submitRemoveEmail" *ngIf="submitRemoveEmail">
+                                                                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+                                                                        <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                                        <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                                        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                                        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                                        <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                                        <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                                        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                                        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                                    </svg>
+                                                                    Patientez ...
+                                                                </button>
+                                                            </div>
+                                                        </form>
+
+                                                        <div class="table-responsive">
+                                                            <table class="table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col">N°</th>
+                                                                        <th scope="col">E-MAIL</th>
+                                                                        <th>Actions</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody *ngIf="emails.length > 0">
+                                                                    <tr *ngFor="let item of emails; let i = index">
+                                                                        <th scope="row">{{ i+1 }}</th>
+                                                                        <td>{{ item.email }}</td>
+                                                                        <td>
+                                                                            <button type="button" href="#" (click)="emailClick(item); removeEmail = !removeEmail; addEmail = false;" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <h1 *ngIf="emails.length <= 0" class="text-center items-center p-2">Aucune donnée à afficher</h1>
+                                                        </div>
+
+                                                        <div class="grid grid-cols-1 grid-cols-2 gap-2">
+                                                            <div style="display: none;">
+                                                                <canvas
+                                                                #canvas
+                                                                (touchstart)="startDrawing($event)"
+                                                                (touchmove)="moved($event)"
+                                                                width="700"
+                                                                height="200"
+                                                                ></canvas>
+                                                            </div>
+                                                            <div class="col-md-4" style="display: none;">
+                                                                <h6 class="d-flex justify-content-center"><b>Signature de l'expert</b></h6>
+                                                                <canvas
+                                                                #expertCanvas
+                                                                (touchstart)="startDrawing($event)"
+                                                                (touchmove)="moved($event)"
+                                                                width="250"
+                                                                height="150"
+                                                                style="border: 1px solid black; width: 100%;"
+                                                                ></canvas>
+                                                                <p class="error-message" *ngIf="expertSignatureNeeded">Signature obligatoire</p>
+                                                                <div class="buttons flex justify-center items-center pt-2">
+                                                                    <button class="btn btn-danger ltr:ml-4 rtl:mr-4" (click)="clearExpertPad()">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                                        </svg>
+                                                                    </button>
+                                                                    <button class="btn btn-success ltr:ml-4 rtl:mr-4" (click)="saveExpertPad()">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                                                        </svg>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <h6 class="d-flex justify-content-center"><b>Signature du réparateur</b></h6>
+                                                                <canvas
+                                                                #repairerCanvas
+                                                                (touchstart)="startDrawing($event)"
+                                                                (touchmove)="moved($event)"
+                                                                width="250"
+                                                                height="150"
+                                                                style="border: 1px solid black; width: 100%;"
+                                                                ></canvas>
+                                                                <p class="error-message" *ngIf="repairerSignatureNeeded">Signature obligatoire</p>
+                                                                <div class="buttons flex justify-center items-center pt-2">
+                                                                    <button class="btn btn-danger ltr:ml-4 rtl:mr-4" (click)="clearRepairerPad()">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                                        </svg>
+                                                                    </button>
+                                                                    <button class="btn btn-success ltr:ml-4 rtl:mr-4" (click)="saveRepairerPad()">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                                                        </svg>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <h6 class="d-flex justify-content-center"><b>Signature du client</b></h6>
+                                                                <canvas
+                                                                #customerCanvas
+                                                                (touchstart)="startDrawing($event)"
+                                                                (touchmove)="moved($event)"
+                                                                width="250"
+                                                                height="150"
+                                                                style="border: 1px solid black; width: 100%;"
+                                                                ></canvas>
+                                                                <p class="error-message" *ngIf="customerSignatureNeeded">Signature obligatoire</p>
+                                                                <div class="buttons flex justify-center items-center pt-2">
+                                                                    <button class="btn btn-danger ltr:ml-4 rtl:mr-4" (click)="clearCustomerPad()">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                                        </svg>
+                                                                    </button>
+                                                                    <button class="btn btn-success ltr:ml-4 rtl:mr-4" (click)="saveCustomerPad()">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                                                        </svg>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="grid grid-cols-1 grid-cols-2 gap-2">
+                                                            <div class="col-md-4" style="display: none;">
+                                                                <div *ngIf="expertSignatureNeeded === false">
+                                                                    <img src="{{ expertSignatureImg }}" alt="" srcset="" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div *ngIf="repairerSignatureNeeded === false">
+                                                                    <img src="{{ repairerSignatureImg }}" alt="" srcset="" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div *ngIf="customerSignatureNeeded === false">
+                                                                    <img src="{{ customerSignatureImg }}" alt="" srcset="" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="flex justify-center items-center">
+                                                            <button class="btn btn-outline-danger ltr:ml-4 rtl:mr-4" (click)="step6 = !step6; step7 = !step7;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+                                                                </svg>
+                                                                &nbsp;
+                                                                Précédent
+                                                            </button>
+                                                            <button class="btn btn-outline-success ltr:ml-4 rtl:mr-4" (click)="validateStep7();">
+                                                                Suivant
+                                                                &nbsp;
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="row" [hidden]="!step8">
+
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">8/8 - Récapitulation</h5>
+
+                                                    <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
+                                                        <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
+                                                            <div class="bg-success  h-4 rounded-full w-12/12 text-center text-white text-xs">100%</div>
+                                                        </div>
+                                                        <br>
+                                                    </div>
+
+                                                    <div class="table-responsive">
+                                                        <table>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="col">
+                                                                      <center><img src="assets/images/logo_eg.jpg" width="150" height="25" alt="logo"></center>
+                                                                    </th>
+                                                                    <th scope="col">FICHE D'EXPERTISE</th>
+                                                                    <th scope="col">DATE: {{ dateNow | date: 'dd/MM/yyyy' }}</th>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <div class="table-responsive">
+                                                        <table>
+                                                            <tbody>
+                                                              <tr>
+                                                                <th colspan="3" scope="col">DOSSIER SUIVI PAR :</th>
+                                                              </tr>
+                                                            </tbody>
+                                                            <tbody>
+                                                                <tr>
+                                                                  <th scope="col">EXPERT</th>
+                                                                  <th scope="col">REPARATEUR</th>
+                                                                  <th scope="col">CLIENT</th>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tbody>
+                                                              <tr>
+                                                                <td>
+                                                                    <div class="text-left d-flex flex-column bd-highlight mb-3" style="text-align: left;" *ngIf="user_logged">
+                                                                        <div class="p-2 bd-highlight">NOM : <b>{{user_logged.last_name}} {{user_logged.first_name}}</b></div>
+                                                                        <div class="p-2 bd-highlight">CONTACT : <b>{{user_logged.phone}}</b></div>
+                                                                        <div class="p-2 bd-highlight">E-MAIL : <b>{{user_logged.email}}</b></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="text-left d-flex flex-column bd-highlight mb-3" style="text-align: left;">
+                                                                        <div class="p-2 bd-highlight">NOM : <b>{{name}}</b></div>
+                                                                        <div class="p-2 bd-highlight">CONTACT : <b>{{phone}}</b></div>
+                                                                        <div class="p-2 bd-highlight">E-MAIL : <b>{{email}}</b></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                  <div class="text-left d-flex flex-column bd-highlight mb-3" style="text-align: left;">
+                                                                      <div class="p-2 bd-highlight">NOM : <b>{{client_name}}</b></div>
+                                                                      <div class="p-2 bd-highlight">CONTACT : <b>{{client_phone}}</b></div>
+                                                                      <div class="p-2 bd-highlight">E-MAIL : <b>{{client_email}}</b></div>
+                                                                  </div>
+                                                              </td>
+                                                              </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <div class="table-responsive">
+                                                        <table>
+                                                            <tbody>
+                                                              <tr>
+                                                                <th colspan="5" scope="col">IDENTIFICATION DU VEHICULE</th>
+                                                              </tr>
+                                                            </tbody>
+                                                            <tbody>
+                                                                <tr>
+                                                                  <th scope="col">IMMATRICULATION</th>
+                                                                  <th scope="col">MARQUE</th>
+                                                                  <td>
+                                                                    MODELE
+                                                                    <span *ngIf="type"> - TYPE</span>
+                                                                    <span *ngIf="option"> - OPTION</span>
+                                                                  </td>
+                                                                  <th scope="col">COULEUR</th>
+                                                                  <th scope="col">KILOMETRAGE</th>
+                                                                </tr>
+                                                              </tbody>
+                                                            <tbody>
+                                                              <tr>
+                                                                <td>{{license_plate}}</td>
+                                                                <td>{{brand}}</td>
+                                                                <td>
+                                                                    {{model}}
+                                                                    <span *ngIf="type"> - {{type}}</span>
+                                                                    <span *ngIf="option"> - {{option}}</span>
+                                                                </td>
+                                                                <td>{{color}}</td>
+                                                                <td>{{mileage}} km</td>
+                                                              </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <div class="text-left d-flex flex-column bd-highlight mb-3">
+                                                        <div class="p-2 bd-highlight"><b>POINT DE CHOC</b> :
+                                                            <p>{{shock_point_label}}</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="table-responsive">
+                                                        <table>
+                                                            <tbody style="background-color: rgb(223, 221, 218);">
+                                                              <tr>
+                                                                <th colspan="6" scope="col">TRAVAUX A FAIRE SOUS RESERVE DE DEMONTAGE</th>
+                                                              </tr>
+                                                            </tbody>
+                                                            <tbody>
+                                                                <tr>
+                                                                  <th scope="col">N°</th>
+                                                                  <th scope="col">DESIGNATION</th>
+                                                                  <th scope="col">REMPLACEMENT</th>
+                                                                  <th scope="col">REPARATION</th>
+                                                                  <th scope="col">PEINDRE</th>
+                                                                  <th scope="col">CONTRÔLE</th>
+                                                                </tr>
+                                                              </tbody>
+                                                            <tbody *ngIf="works.length > 0">
+                                                              <tr *ngFor="let item of works; let i = index">
+                                                                <td>{{ i+1 }}</td>
+                                                                <td>{{item.designation_label}}</td>
+                                                                <td>
+                                                                    <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.replacement == 1"></i>
+                                                                </td>
+                                                                <td>
+                                                                    <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.repair == 1"></i>
+                                                                </td>
+                                                                <td>
+                                                                    <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.paint == 1"></i>
+                                                                </td>
+                                                                <td>
+                                                                    <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.control == 1"></i>
+                                                                </td>
+                                                              </tr>
+                                                            </tbody>
+                                                            <h1 *ngIf="works.length <= 0" class="text-center items-center p-2" style="text-align: center;">Aucune donnée à afficher</h1>
+                                                        </table>
+                                                    </div>
+
+                                                    <div class="text-left d-flex flex-column bd-highlight mt-3 mb-3" style="background-color: rgb(223, 221, 218);">
+                                                        <div class="p-2 bd-highlight"><b>NOTE D'EXPERT</b> : {{remark}}</div>
+                                                    </div>
+
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered text-center">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="col">
+                                                                        CLIENT
+                                                                    </th>
+                                                                    <th scope="col">
+                                                                        EXPERT
+                                                                    </th>
+                                                                    <th scope="col">
+                                                                        REPARATEUR
+                                                                    </th>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td scope="col">
+                                                                        <div *ngIf="!customerSignatureImg">
+                                                                            <img src="assets/images/wbg.png" width="190" height="70" alt="customer_signature">
+                                                                        </div>
+                                                                        <div *ngIf="customerSignatureImg">
+                                                                          <img src="{{customerSignatureImg}}" width="190" height="70" alt="customer_signature">
+                                                                      </div>
+                                                                    </td>
+                                                                    <td scope="col" class="text-center">
+                                                                        <div *ngIf="user_logged">
+                                                                            <img src="{{uploadLink}}/storage/signature/{{user_logged.signature}}" width="190" height="70" alt="expert_signature">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td scope="col">
+                                                                        <div *ngIf="!repairerSignatureImg">
+                                                                          <img src="assets/images/wbg.png" width="190" height="70" alt="repairer_signature">
+                                                                        </div>
+                                                                        <div *ngIf="repairerSignatureImg">
+                                                                            <img src="{{repairerSignatureImg}}" width="190" height="70" alt="repairer_signature">
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <hr style="border: 1px solid black;">
+                                                        <div class="text-left d-flex flex-column bd-highlight mb-3">
+                                                          <div class="p-2 bd-highlight">
+                                                            SARLU au capital de 7 000 000 FCFA - Cocody, Rivera Golf, Immeuble FRAKE 1er Etage porte 812 - RCCM
+                                                            CI-ABJ-03-2022-B13-11908-NCC 2245465 N 04 BP 2032 ABIDJAN 04 - N°Compte BNI : CI092 01002 0022199600003 55
+                                                            TEL : +225 27 22 28 82 75 - CEL : +225 07 07 36 35 45
+                                                            EMAIL : sgaexpertise@gmail.com - www.sgaexpertise.ci
+                                                          </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="flex justify-end items-center mt-8">
+                                                        <button class="btn btn-outline-danger ltr:ml-4 rtl:mr-4" (click)="step7 = !step7; step8 = !step8;">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+                                                            </svg>
+                                                            &nbsp;
+                                                            Précédent
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submit" *ngIf="!submit" (click)="save();">Enregistrer</button>
+                                                        <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submit" *ngIf="submit">
+                                                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+                                                                <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                                <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                                <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                                <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                                <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                                <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                                <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                                <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                            </svg>
+                                                            Patientez ...
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <app-preloader></app-preloader>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+[hidden] {
+    display: none;
+}
+
+table, thead, tfoot, th, td {
+  border: 1px solid black;
+  text-align: center;
+}
+
+table thead tr, 
+    table tfoot tr {
+  border-bottom-width: 0px;
+  --tw-bg-opacity: 1 !important;
+  background-color: white !important;
+  border: 1px solid;
+}

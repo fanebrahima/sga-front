@@ -1,0 +1,165 @@
+<app-sidebar></app-sidebar>
+<div class="main-content">
+    <app-header></app-header>
+    <div *ngIf="!permitted">
+    </div>
+    <div class="p-5">
+        <div class="p-6 animate__animated" :class="[$store.app.animation]">
+            <div x-data="sales">
+                <ul class="flex space-x-2 rtl:space-x-reverse">
+                    <li>
+                        <a href="javascript:;" class="text-primary hover:underline">Utilisateur</a>
+                    </li>
+                    <li class="before:content-['/'] ltr:before:mr-1 rtl:before:ml-1">
+                        <span>Ajout</span>
+                    </li>
+                </ul>
+                <div class="pt-5">
+                    <div class="row mb-5">
+                        <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="open && '!block'">
+                            <div class="flex items-start justify-center min-h-screen px-4">
+                                <div x-show="open" x-transition x-transition.duration.300 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-5xl my-8">
+                                    <h5 class="font-bold text-lg p-5">Ajout d'un utilisateur</h5>
+                                    <div class="p-5" *ngIf="user_logged">
+                                        <form class="space-y-5" style="padding-bottom: 100px;" (submit)="save()" *ngIf="user_logged.profil_id == 1 || user_logged.profil_id == 2">
+                                            <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist_error">
+                                                <span class="ltr:pr-2 rtl:pl-2">{{error_message}}</span><br>
+                                            </div>
+                                            <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-right: 10%; padding-left: 10%;">
+                                                <div class="mb-3" [formGroup]="formGroup">
+                                                    <label>Nom <span style="color:red">*</span></label>
+                                                    <input type="text" class="form-input" formControlName="first_name" [ngClass]="{ 'is-invalid': submitted && f['first_name'].errors }"
+                                                        name="first_name" [(ngModel)]="first_name" />
+                                                    <div *ngIf="submitted && f['first_name'].errors" class="mt-1">
+                                                        <div *ngIf="submitted && f['first_name'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Prénom(s)</label>
+                                                    <input type="text" class="form-input" name="last_name" [(ngModel)]="last_name" />
+                                                </div>
+                                                <div class="mb-3" [formGroup]="formGroup">
+                                                    <label>Email <span style="color:red">*</span></label>
+                                                    <input type="email" class="form-input" formControlName="email" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
+                                                        name="email" [(ngModel)]="email" />
+                                                    <div *ngIf="submitted && f['email'].errors" class="mt-1">
+                                                        <div *ngIf="submitted && f['email'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                        <div *ngIf="submitted && f['email'].errors?.['pattern']" class="text-danger">Ce champ doit être une adresse email !</div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>Téléphone</label>
+                                                    <input type="text" class="form-input" name="phone" [(ngModel)]="phone" />
+                                                </div>
+                                                <div class="mb-3" [formGroup]="formGroup">
+                                                    <label>Rôle {{repairer_id}} {{profil_id}} <span style="color:red;">*</span></label>
+                                                    <ng-select class="form-control" (change)="changeProfil(profil_id)" formControlName="profil_id" id="profil_id" [(ngModel)]="profil_id" name="profil_id" autocomplete="profil_id" autofocus>
+                                                        <ng-option *ngFor="let item of listProfiles" [value]="item.id">{{ item.label }}</ng-option>
+                                                     </ng-select>
+                                                     <div *ngIf="submitted && f['profil_id'].errors" class="mt-1">
+                                                        <div *ngIf="submitted && f['profil_id'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3" *ngIf="profil_id == 3">
+                                                  <label>Réparateur <span style="color:red;">*</span></label>
+                                                  <ng-select class="form-control" id="repairer_id" [(ngModel)]="repairer_id" name="repairer_id" autocomplete="repairer_id" autofocus>
+                                                      <ng-option *ngFor="let item of listRepairer" [value]="item.id">{{item.name}}</ng-option>
+                                                   </ng-select>
+                                                </div>
+                                                <div class="mb-3" *ngIf="profil_id == 1 || profil_id == 2">
+                                                    <label>Signature</label>
+                                                    <div class="user-pro-img">
+                                                        <img id="blah" [src]="signatureSrc || 'assets/images/no-picture.png'" width="260" height="150" style="width: 250px; height: 200px;" alt="Signature" />
+                                                    </div>
+                                                    <br>
+                                                    <input type="file" accept="image/*" [(ngModel)]="signature" class="form-input file:py-2 file:px-4 file:border-0 file:font-semibold p-0 file:bg-primary/90 ltr:file:mr-5 rtl:file-ml-5 file:text-white file:hover:bg-primary" name="signature" (change)="onSelectSignature($event)" id="customFileLang" lang="fr">
+                                                </div>
+                                                <!-- <div class="mb-3">
+                                                    <label>Signature</label>
+                                                    <div class="user-pro-img">
+                                                        <img id="blah" [src]="signatureSrc || 'assets/images/signature.png'" class="w-24 h-24 rounded-full object-cover" alt="Signature" />
+                                                    </div>
+                                                    <input type="file" [(ngModel)]="signature" class="multi file-upload-input with-preview" name="signature" (change)="onSelectSignature($event)" id="customFileLang" lang="fr">
+                                                </div> -->
+                                            </div>
+
+                                            <div class="flex justify-end items-center mt-8">
+                                                <button type="button" (click)="backClicked()" class="btn btn-outline-danger">Annuler</button>
+                                                <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submit" *ngIf="!submit">Enregistrer</button>
+                                                <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submit" *ngIf="submit">
+                                                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+                                                        <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                        <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                        <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                        <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                    </svg>
+                                                    Patientez ...
+                                                </button>
+                                            </div>
+                                        </form>
+
+                                        <form class="space-y-5" style="padding-bottom: 100px;" (submit)="saveByRepairer()" *ngIf="profil_id == 3">
+                                          <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist_error">
+                                              <span class="ltr:pr-2 rtl:pl-2">{{error_message}}</span><br>
+                                          </div>
+                                          <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-right: 10%; padding-left: 10%;">
+                                              <div class="mb-3" [formGroup]="formGroupByRepaier">
+                                                  <label>Nom <span style="color:red">*</span></label>
+                                                  <input type="text" class="form-input" formControlName="first_name" [ngClass]="{ 'is-invalid': submitted && fByRepaier['first_name'].errors }"
+                                                      name="first_name" [(ngModel)]="first_name" />
+                                                  <div *ngIf="submittedByRepaier && fByRepaier['first_name'].errors" class="mt-1">
+                                                      <div *ngIf="submittedByRepaier && fByRepaier['first_name'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                  </div>
+                                              </div>
+                                              <div class="mb-3">
+                                                  <label>Prénom(s)</label>
+                                                  <input type="text" class="form-input" name="last_name" [(ngModel)]="last_name" />
+                                              </div>
+                                              <div class="mb-3" [formGroup]="formGroupByRepaier">
+                                                  <label>Email <span style="color:red">*</span></label>
+                                                  <input type="email" class="form-input" formControlName="email" [ngClass]="{ 'is-invalid': submitted && fByRepaier['email'].errors }"
+                                                      name="email" [(ngModel)]="email" />
+                                                  <div *ngIf="submittedByRepaier && fByRepaier['email'].errors" class="mt-1">
+                                                      <div *ngIf="submittedByRepaier && fByRepaier['email'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                      <div *ngIf="submittedByRepaier && fByRepaier['email'].errors?.['pattern']" class="text-danger">Ce champ doit être une adresse email !</div>
+                                                  </div>
+                                              </div>
+                                              <div class="mb-3">
+                                                  <label>Téléphone</label>
+                                                  <input type="text" class="form-input" name="phone" [(ngModel)]="phone" />
+                                              </div>
+                                          </div>
+
+                                          <div class="flex justify-end items-center mt-8">
+                                              <button type="button" (click)="backClicked()" class="btn btn-outline-danger">Annuler</button>
+                                              <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submitByRepaier" *ngIf="!submitByRepaier">Enregistrer</button>
+                                              <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submitByRepaier" *ngIf="submitByRepaier">
+                                                  <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+                                                      <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                      <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                      <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                      <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                      <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                      <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                      <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                      <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                  </svg>
+                                                  Patientez ...
+                                              </button>
+                                          </div>
+                                      </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <app-preloader></app-preloader>
+            </div>
+        </div>
+    </div>
+</div>
