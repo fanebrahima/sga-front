@@ -26,7 +26,7 @@
                                                 </div>
                                                 <div class="row" [hidden]="!step1">
 
-                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">1/8 - Choix du réparateur</h5>
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">1/9 - Choix du réparateur</h5>
 
                                                     <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
                                                         <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
@@ -84,7 +84,7 @@
                                                 </div>
                                                 <div class="row" [hidden]="!step2">
 
-                                                  <h5 class="font-bold text-lg p-5 flex justify-center items-center">2/8 - Choix du client</h5>
+                                                  <h5 class="font-bold text-lg p-5 flex justify-center items-center">2/9 - Choix du client</h5>
 
                                                   <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
                                                       <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
@@ -142,7 +142,7 @@
                                               </div>
                                                 <div class="row" [hidden]="!step3">
 
-                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">3/8 - Choix du véhicule</h5>
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">3/9 - Choix du véhicule</h5>
 
                                                     <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
                                                         <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
@@ -258,7 +258,7 @@
                                                 </div>
                                                 <div class="row" [hidden]="!step4">
 
-                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">4/8 - Point de choc</h5>
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">4/9 - Point de choc</h5>
 
                                                     <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
                                                         <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
@@ -266,18 +266,27 @@
                                                         </div>
                                                         <br>
                                                         <div class="mb-3">
-                                                            <label>Point de choc</label>
-                                                            <ng-select class="form-control" (change)="changeShockPoint(shock_point_id)" id="shock_point_id" [(ngModel)]="shock_point_id" name="shock_point_id" autocomplete="shock_point_id" autofocus>
-                                                                <ng-option *ngFor="let item of listShockPoint" [value]="item.id">{{ item.label }}</ng-option>
+                                                            <label>Assureur</label>
+                                                            <ng-select class="form-control" (change)="changeInsurer(insurer_id)" id="insurer_id" [(ngModel)]="insurer_id" name="insurer_id" autocomplete="insurer_id" autofocus>
+                                                                <ng-option *ngFor="let item of listInsurer" [value]="item.id">{{ item.name }}</ng-option>
                                                              </ng-select>
                                                         </div>
 
                                                         <div class="mb-3" [formGroup]="formGroupStep4">
-                                                            <label>Libellé <span style="color:red">*</span></label>
-                                                            <input type="text" class="form-input" formControlName="shock_point_label" [ngClass]="{ 'is-invalid': submittedStep4 && fStep4['shock_point_label'].errors }"
-                                                                name="shock_point_label" [(ngModel)]="shock_point_label" />
-                                                            <div *ngIf="submittedStep4 && fStep4['shock_point_label'].errors" class="mt-1">
-                                                                <div *ngIf="submittedStep4 && fStep4['shock_point_label'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                            <label>Nom de l'assureur <span style="color:red">*</span></label>
+                                                            <input type="text" class="form-input" formControlName="insurer_name" [ngClass]="{ 'is-invalid': submittedStep4 && fStep4['insurer_name'].errors }"
+                                                                name="insurer_name" [(ngModel)]="insurer_name" />
+                                                            <div *ngIf="submittedStep4 && fStep4['insurer_name'].errors" class="mt-1">
+                                                                <div *ngIf="submittedStep4 && fStep4['insurer_name'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3" [formGroup]="formGroupStep4">
+                                                            <label>Numéro de sinistre <span style="color:red">*</span></label>
+                                                            <input type="text" class="form-input" formControlName="disaster_number" [ngClass]="{ 'is-invalid': submittedStep4 && fStep4['disaster_number'].errors }"
+                                                                name="disaster_number" [(ngModel)]="disaster_number" />
+                                                            <div *ngIf="submittedStep4 && fStep4['disaster_number'].errors" class="mt-1">
+                                                                <div *ngIf="submittedStep4 && fStep4['disaster_number'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
                                                             </div>
                                                         </div>
 
@@ -303,7 +312,7 @@
                                                 </div>
                                                 <div class="row" [hidden]="!step5">
 
-                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">5/8 - Travaux à faire</h5>
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">5/9 - Points de choc</h5>
 
                                                     <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
                                                         <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
@@ -311,7 +320,7 @@
                                                         </div>
                                                         <br>
 
-                                                        <div class="flex items-center justify-between flex-wrap gap-4" *ngIf="!removeWork">
+                                                        <div class="flex items-center justify-between flex-wrap gap-4 mb-2" *ngIf="!removeShockPoint">
                                                             <h2 class="text-xl"> </h2>
                                                             <div class="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
                                                                 <div class="flex gap-3">
@@ -319,97 +328,49 @@
 
                                                                     </div>
                                                                     <div>
-                                                                        <button type="button" class="btn btn-primary" (click)="addWork = !addWork">
+                                                                        <button type="button" class="btn btn-primary" (click)="addShockPoint = !addShockPoint">
                                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
                                                                                 <line x1="12" y1="5" x2="12" y2="19"></line>
                                                                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                                                                             </svg>
-                                                                            Ajouter un travail
+                                                                            Ajouter un point
                                                                         </button>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
 
-                                                        <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist_work_error">
-                                                            <span class="ltr:pr-2 rtl:pl-2">Veuillez renseigner au moins un travail !</span><br>
+                                                        <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist_shock_error">
+                                                            <span class="ltr:pr-2 rtl:pl-2">Veuillez renseigner au moins un point de choc !</span><br>
                                                         </div>
 
-                                                        <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist">
-                                                            <span class="ltr:pr-2 rtl:pl-2"><b>{{label}}</b> Déjà utilisée !</span><br>
+                                                        <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist && step5">
+                                                            <span class="ltr:pr-2 rtl:pl-2"><b>{{label}}</b> Déjà utilisé !</span><br>
                                                         </div>
 
-                                                        <form class="space-y-5" style="padding-bottom: 10px;" *ngIf="addWork">
+                                                        <form class="space-y-5" style="padding-bottom: 10px;" *ngIf="addShockPoint">
                                                             <div class="grid grid-cols-1 grid-cols-1 gap-1">
                                                                 <div class="mb-3">
-                                                                    <label>Désignation</label>
-                                                                    <ng-select class="form-control" (change)="changeDesignation(designation_id)" id="designation_id" [(ngModel)]="designation_id" name="designation_id" autocomplete="designation_id" autofocus>
-                                                                        <ng-option *ngFor="let item of listDesignation" [value]="item.id">{{ item.label }}</ng-option>
+                                                                    <label>Point de choc</label>
+                                                                    <ng-select class="form-control" (change)="changeShockPoint(shock_point_id)" id="shock_point_id" [(ngModel)]="shock_point_id" name="shock_point_id" autocomplete="shock_point_id" autofocus>
+                                                                        <ng-option *ngFor="let item of listShockPoint" [value]="item.id">{{ item.label }}</ng-option>
                                                                      </ng-select>
                                                                 </div>
-
-                                                                <div class="mb-3" [formGroup]="designationFormGroup">
+        
+                                                                <div class="mb-3" [formGroup]="formGroupStep5">
                                                                     <label>Libellé <span style="color:red">*</span></label>
-                                                                    <input type="text" class="form-input" formControlName="label" [ngClass]="{ 'is-invalid': submitted && fWork['label'].errors }"
-                                                                        name="label" [(ngModel)]="label" />
-                                                                    <div *ngIf="submittedWork && fWork['label'].errors" class="mt-1">
-                                                                        <div *ngIf="submittedWork && fWork['label'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                                    <input type="text" class="form-input" formControlName="shock_point_label" [ngClass]="{ 'is-invalid': submittedStep4 && fStep5['shock_point_label'].errors }"
+                                                                        name="shock_point_label" [(ngModel)]="shock_point_label" />
+                                                                    <div *ngIf="submittedStep5 && fStep5['shock_point_label'].errors" class="mt-1">
+                                                                        <div *ngIf="submittedStep5 && fStep5['shock_point_label'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
                                                                     </div>
                                                                 </div>
                                                             </div>
 
-                                                            <div class="grid grid-cols-1 grid-cols-4 gap-4">
-                                                                <div>
-                                                                    <label for="">Remplacement</label>
-                                                                    <label class="w-12 h-6 relative" *ngIf="replacement == 0">
-                                                                        <input type="checkbox" (change)="changeReplacement($event)" id="replacement" name="replacement" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
-                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
-                                                                    </label>
-                                                                    <label class="w-12 h-6 relative" *ngIf="replacement == 1">
-                                                                        <input type="checkbox" (change)="changeReplacement($event)" id="replacement" name="replacement" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" checked/>
-                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
-                                                                    </label>
-                                                                </div>
-                                                                <div>
-                                                                    <label for="">Réparation</label>
-                                                                    <label class="w-12 h-6 relative" *ngIf="repair == 0">
-                                                                        <input type="checkbox" (change)="changeRepair($event)" id="repair" name="repair" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
-                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
-                                                                    </label>
-                                                                    <label class="w-12 h-6 relative" *ngIf="repair == 1">
-                                                                        <input type="checkbox" (change)="changeRepair($event)" id="repair" name="repair" value="0" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" checked/>
-                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
-                                                                    </label>
-                                                                </div>
-                                                                <div>
-                                                                    <label for="">Peinture</label>
-                                                                    <label class="w-12 h-6 relative" *ngIf="paint == 0">
-                                                                        <input type="checkbox" (change)="changePaint($event)" id="paint" name="paint" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
-                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
-                                                                    </label>
-                                                                    <label class="w-12 h-6 relative" *ngIf="paint == 1">
-                                                                        <input type="checkbox" (change)="changePaint($event)" id="paint" name="paint" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" checked/>
-                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
-                                                                    </label>
-                                                                </div>
-                                                                <div>
-                                                                    <label for="">Contrôle</label>
-                                                                    <label class="w-12 h-6 relative" *ngIf="control == 0">
-                                                                        <input type="checkbox" (change)="changePlace($event)" id="control" name="control" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
-                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
-                                                                    </label>
-                                                                    <label class="w-12 h-6 relative" *ngIf="control == 1">
-                                                                        <input type="checkbox" (change)="changePlace($event)" id="control" name="control" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
-                                                                        <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
-                                                                    </label>
-                                                                </div>
-
-                                                            </div>
-
                                                             <div class="flex justify-end items-center mt-8">
-                                                                <button type="button" class="btn btn-outline-danger" (click)="addWork = !addWork">Annuler</button>
-                                                                <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submitAddWork" *ngIf="!submitAddWork" (click)="saveWork();">Ajouter</button>
-                                                                <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submitAddWork" *ngIf="submitAddWork">
+                                                                <button type="button" class="btn btn-outline-danger" (click)="addShockPoint = !addShockPoint">Annuler</button>
+                                                                <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submitAddShockPoint" *ngIf="!submitAddShockPoint" (click)="saveShockPoint();">Ajouter</button>
+                                                                <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submitAddShockPoint" *ngIf="submitAddShockPoint">
                                                                     <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
                                                                         <line x1="12" y1="2" x2="12" y2="6"></line>
                                                                         <line x1="12" y1="18" x2="12" y2="22"></line>
@@ -425,16 +386,16 @@
                                                             </div>
                                                         </form>
 
-                                                        <form class="space-y-5" style="padding-bottom: 10px;" *ngIf="removeWork && designationSelected">
+                                                        <form class="space-y-5" style="padding-bottom: 10px;" *ngIf="removeShockPoint && shockPointSelected">
 
                                                             <div class="flex justify-center items-center">
-                                                                <h3>Voulez-vous supprimer <b>{{designationSelected.designation_label}}</b> ?</h3>
+                                                                <h3>Voulez-vous supprimer <b>{{shockPointSelected.shock_point_label}}</b> ?</h3>
                                                             </div>
 
                                                             <div class="flex justify-end items-center mt-8">
-                                                                <button type="button" class="btn btn-outline-danger" (click)="removeWork = !removeWork">Annuler</button>
-                                                                <button type="submit" class="btn btn-danger ltr:ml-4 rtl:mr-4" (click)="deleteItem();" [disabled]="submitRemoveWork" *ngIf="!submitRemoveWork">Supprimer</button>
-                                                                <button type="button" class="btn btn-danger ltr:ml-4 rtl:mr-4" [disabled]="submitRemoveWork" *ngIf="submitRemoveWork">
+                                                                <button type="button" class="btn btn-outline-danger" (click)="removeShockPoint = !removeShockPoint">Annuler</button>
+                                                                <button type="submit" class="btn btn-danger ltr:ml-4 rtl:mr-4" (click)="deleteShockPoint();" [disabled]="submitRemoveShockPoint" *ngIf="!submitRemoveShockPoint">Supprimer</button>
+                                                                <button type="button" class="btn btn-danger ltr:ml-4 rtl:mr-4" [disabled]="submitRemoveShockPoint" *ngIf="submitRemoveShockPoint">
                                                                     <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
                                                                         <line x1="12" y1="2" x2="12" y2="6"></line>
                                                                         <line x1="12" y1="18" x2="12" y2="22"></line>
@@ -455,37 +416,21 @@
                                                                 <thead>
                                                                     <tr>
                                                                         <th scope="col">N°</th>
-                                                                        <th scope="col">DESIGNATION</th>
-                                                                        <th scope="col">REMPLACEMENT</th>
-                                                                        <th scope="col">REPARATION</th>
-                                                                        <th scope="col">PEINDRE</th>
-                                                                        <th scope="col">CONTRÔLE</th>
-                                                                        <th>Actions</th>
+                                                                        <th scope="col">POINTS DE CHOC</th>
+                                                                        <th>ACTIONS</th>
                                                                     </tr>
                                                                 </thead>
-                                                                <tbody *ngIf="works.length > 0">
-                                                                    <tr *ngFor="let item of works; let i = index">
+                                                                <tbody *ngIf="shock_points.length > 0">
+                                                                    <tr *ngFor="let item of shock_points; let i = index">
                                                                         <th scope="row">{{ i+1 }}</th>
-                                                                        <td>{{ item.designation_label }}</td>
+                                                                        <td>{{ item.shock_point_label }}</td>
                                                                         <td>
-                                                                            <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.replacement == 1"></i>
-                                                                        </td>
-                                                                        <td>
-                                                                            <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.repair == 1"></i>
-                                                                        </td>
-                                                                        <td>
-                                                                            <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.paint == 1"></i>
-                                                                        </td>
-                                                                        <td>
-                                                                            <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.control == 1"></i>
-                                                                        </td>
-                                                                        <td>
-                                                                            <button type="button" href="#" (click)="itemClick(item); removeWork = !removeWork; addWork = false;" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                                            <button type="button" href="#" (click)="shockPointClick(item); removeShockPoint = !removeShockPoint; addShockPoint = false;" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
-                                                            <h1 *ngIf="works.length <= 0" class="text-center items-center p-2">Aucune donnée à afficher</h1>
+                                                            <h1 *ngIf="shock_points.length <= 0" class="text-center items-center p-2">Aucune donnée à afficher</h1>
                                                         </div>
 
                                                         <div class="flex justify-center items-center">
@@ -510,43 +455,196 @@
                                                 </div>
                                                 <div class="row" [hidden]="!step6">
 
-                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">6/8 - Note d'expert</h5>
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">6/9 - Travaux à faire</h5>
 
                                                     <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
                                                         <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
-                                                            <div class="bg-success  h-4 rounded-full w-10/12 text-center text-white text-xs">80%</div>
+                                                            <div class="bg-success  h-4 rounded-full w-6/12 text-center text-white text-xs">50%</div>
                                                         </div>
                                                         <br>
 
-                                                        <div class="mb-3">
-                                                            <label>Choisir une note d'expert</label>
-                                                            <ng-select class="form-control" (change)="changeRemark(remark)" id="remark" [(ngModel)]="remark" name="remark" autocomplete="remark" autofocus>
-                                                                <ng-option *ngFor="let item of listRemark" [value]="item.remark">{{item.remark}}</ng-option>
-                                                             </ng-select>
-                                                        </div>
-
-                                                        <div class="mb-3" [formGroup]="formGroupStep6">
-                                                            <label>Note d'expert <span style="color:red">*</span></label>
-                                                            <textarea class="form-textarea min-h-[100px]" formControlName="remark" [ngClass]="{ 'is-invalid': submitted && fStep6['remark'].errors }"
-                                                            name="remark" [(ngModel)]="remark"></textarea>
-                                                            <!-- <input type="text" class="form-input" formControlName="remark" [ngClass]="{ 'is-invalid': submitted && f['remark'].errors }"
-                                                                name="remark" [(ngModel)]="remark" /> -->
-                                                            <div *ngIf="submittedStep6 && fStep6['remark'].errors" class="mt-1">
-                                                                <div *ngIf="submittedStep6 && fStep6['remark'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                        <div *ngFor="let shock_point of shock_points; let i = index">
+                                                            <h6 class="font-bold text-sm p-5 flex justify-center items-center">Ajout des travaux de : {{shock_point.shock_point_label}}</h6>
+                                                            <div class="flex items-center justify-between flex-wrap gap-4 mb-2" *ngIf="!removeWork">
+                                                                <h2 class="text-xl"> </h2>
+                                                                <div class="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
+                                                                    <div class="flex gap-3">
+                                                                        <div class="relative ">
+    
+                                                                        </div>
+                                                                        <div>
+                                                                            <button type="button" class="btn btn-primary" (click)="addWork = true; shockPointSelected_id = shock_point.shock_point_id">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                                                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                                                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                                                </svg>
+                                                                                Ajouter un travail
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
+                                                            <br>
+    
+                                                            <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist_work_error && shockPointSelected_id == shock_point.shock_point_id">
+                                                                <span class="ltr:pr-2 rtl:pl-2">Veuillez renseigner au moins un travail !</span><br>
+                                                            </div>
+    
+                                                            <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist && shockPointSelected_id == shock_point.shock_point_id">
+                                                                <span class="ltr:pr-2 rtl:pl-2"><b>{{label}}</b> Déjà utilisée !</span><br>
+                                                            </div>
+    
+                                                            <form class="space-y-5" style="padding-bottom: 10px;" *ngIf="addWork && shockPointSelected_id == shock_point.shock_point_id">
+                                                                <div class="grid grid-cols-1 grid-cols-1 gap-1">
+                                                                    <div class="mb-3">
+                                                                        <label>Désignation</label>
+                                                                        <ng-select class="form-control" (change)="changeDesignation(designation_id)" id="designation_id" [(ngModel)]="designation_id" name="designation_id" autocomplete="designation_id" autofocus>
+                                                                            <ng-option *ngFor="let item of listDesignation" [value]="item.id">{{ item.label }}</ng-option>
+                                                                         </ng-select>
+                                                                    </div>
+    
+                                                                    <div class="mb-3" [formGroup]="designationFormGroup">
+                                                                        <label>Libellé <span style="color:red">*</span></label>
+                                                                        <input type="text" class="form-input" formControlName="label" [ngClass]="{ 'is-invalid': submitted && fWork['label'].errors }"
+                                                                            name="label" [(ngModel)]="label" />
+                                                                        <div *ngIf="submittedWork && fWork['label'].errors" class="mt-1">
+                                                                            <div *ngIf="submittedWork && fWork['label'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+    
+                                                                <div class="grid grid-cols-1 grid-cols-4 gap-4">
+                                                                    <div>
+                                                                        <label for="">Remplacement</label>
+                                                                        <label class="w-12 h-6 relative" *ngIf="replacement == 0">
+                                                                            <input type="checkbox" (change)="changeReplacement($event)" id="replacement" name="replacement" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                                                            <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                        </label>
+                                                                        <label class="w-12 h-6 relative" *ngIf="replacement == 1">
+                                                                            <input type="checkbox" (change)="changeReplacement($event)" id="replacement" name="replacement" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" checked/>
+                                                                            <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div>
+                                                                        <label for="">Réparation</label>
+                                                                        <label class="w-12 h-6 relative" *ngIf="repair == 0">
+                                                                            <input type="checkbox" (change)="changeRepair($event)" id="repair" name="repair" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                                                            <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                        </label>
+                                                                        <label class="w-12 h-6 relative" *ngIf="repair == 1">
+                                                                            <input type="checkbox" (change)="changeRepair($event)" id="repair" name="repair" value="0" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" checked/>
+                                                                            <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div>
+                                                                        <label for="">Peinture</label>
+                                                                        <label class="w-12 h-6 relative" *ngIf="paint == 0">
+                                                                            <input type="checkbox" (change)="changePaint($event)" id="paint" name="paint" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                                                            <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                        </label>
+                                                                        <label class="w-12 h-6 relative" *ngIf="paint == 1">
+                                                                            <input type="checkbox" (change)="changePaint($event)" id="paint" name="paint" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" checked/>
+                                                                            <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div>
+                                                                        <label for="">Contrôle</label>
+                                                                        <label class="w-12 h-6 relative" *ngIf="control == 0">
+                                                                            <input type="checkbox" (change)="changePlace($event)" id="control" name="control" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                                                            <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                        </label>
+                                                                        <label class="w-12 h-6 relative" *ngIf="control == 1">
+                                                                            <input type="checkbox" (change)="changePlace($event)" id="control" name="control" value="1" class="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                                                            <span for="custom_switch_checkbox4" class="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                                                        </label>
+                                                                    </div>
+    
+                                                                </div>
+    
+                                                                <div class="flex justify-end items-center mt-8">
+                                                                    <button type="button" class="btn btn-outline-danger" (click)="addWork = false">Annuler</button>
+                                                                    <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submitAddWork" *ngIf="!submitAddWork" (click)="saveWork(shock_point);">Ajouter</button>
+                                                                    <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submitAddWork" *ngIf="submitAddWork">
+                                                                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+                                                                            <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                                            <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                                            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                                            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                                            <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                                            <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                                            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                                            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                                        </svg>
+                                                                        Patientez ...
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+    
+                                                            <form class="space-y-5" style="padding-bottom: 10px;" *ngIf="removeWork && designationSelected">
+    
+                                                                <div class="flex justify-center items-center">
+                                                                    <h3>Voulez-vous supprimer <b>{{designationSelected.designation_label}}</b> ?</h3>
+                                                                </div>
+    
+                                                                <div class="flex justify-end items-center mt-8">
+                                                                    <button type="button" class="btn btn-outline-danger" (click)="removeWork = !removeWork">Annuler</button>
+                                                                    <button type="submit" class="btn btn-danger ltr:ml-4 rtl:mr-4" (click)="deleteWork();" [disabled]="submitRemoveWork" *ngIf="!submitRemoveWork">Supprimer</button>
+                                                                    <button type="button" class="btn btn-danger ltr:ml-4 rtl:mr-4" [disabled]="submitRemoveWork" *ngIf="submitRemoveWork">
+                                                                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
+                                                                            <line x1="12" y1="2" x2="12" y2="6"></line>
+                                                                            <line x1="12" y1="18" x2="12" y2="22"></line>
+                                                                            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                                                            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                                                            <line x1="2" y1="12" x2="6" y2="12"></line>
+                                                                            <line x1="18" y1="12" x2="22" y2="12"></line>
+                                                                            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                                                            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                                                                        </svg>
+                                                                        Patientez ...
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+    
+                                                            <div class="table-responsive">
+                                                                <table class="table-striped">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col">N°</th>
+                                                                            <th scope="col">DESIGNATION</th>
+                                                                            <th scope="col">REMPLACEMENT</th>
+                                                                            <th scope="col">REPARATION</th>
+                                                                            <th scope="col">PEINDRE</th>
+                                                                            <th scope="col">CONTRÔLE</th>
+                                                                            <th>ACTIONS</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody *ngIf="shock_point.works.length > 0">
+                                                                        <tr *ngFor="let work of shock_point.works; let i = index">
+                                                                            <th scope="row">{{ i+1 }}</th>
+                                                                            <td>{{ work.designation_label }}</td>
+                                                                            <td>
+                                                                                <i class="fa fa-check-circle" aria-hidden="true" *ngIf="work.replacement == 1"></i>
+                                                                            </td>
+                                                                            <td>
+                                                                                <i class="fa fa-check-circle" aria-hidden="true" *ngIf="work.repair == 1"></i>
+                                                                            </td>
+                                                                            <td>
+                                                                                <i class="fa fa-check-circle" aria-hidden="true" *ngIf="work.paint == 1"></i>
+                                                                            </td>
+                                                                            <td>
+                                                                                <i class="fa fa-check-circle" aria-hidden="true" *ngIf="work.control == 1"></i>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button type="button" href="#" (click)="designationClick(work); removeWork = !removeWork; addWork = false;" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                                <h1 *ngIf="shock_point.works.length <= 0" class="text-center items-center p-2">Aucune donnée à afficher</h1>
+                                                            </div>
+                                                            <br>
+                                                            <hr>
                                                         </div>
-                                                        <!-- <div class="mb-3">
-                                                            <label>Adresse e-mail de l'expert</label>
-                                                            <input type="text" class="form-input" name="expert_email" [(ngModel)]="expert_email"/>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label>Adresse e-mail du réparateur</label>
-                                                            <input type="text" class="form-input" name="repairer_email" [(ngModel)]="repairer_email"/>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label>Adresse e-mail du client</label>
-                                                            <input type="text" class="form-input" name="customer_email" [(ngModel)]="customer_email"/>
-                                                        </div> -->
 
                                                         <div class="flex justify-center items-center">
                                                             <button class="btn btn-outline-danger ltr:ml-4 rtl:mr-4" (click)="step5 = !step5; step6 = !step6;">
@@ -570,7 +668,67 @@
                                                 </div>
                                                 <div class="row" [hidden]="!step7">
 
-                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">7/8 - Adresses E-mail</h5>
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">7/9 - Note d'expert</h5>
+
+                                                    <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
+                                                        <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
+                                                            <div class="bg-success  h-4 rounded-full w-10/12 text-center text-white text-xs">80%</div>
+                                                        </div>
+                                                        <br>
+
+                                                        <div class="mb-3">
+                                                            <label>Choisir une note d'expert</label>
+                                                            <ng-select class="form-control" (change)="changeRemark(remark)" id="remark" [(ngModel)]="remark" name="remark" autocomplete="remark" autofocus>
+                                                                <ng-option *ngFor="let item of listRemark" [value]="item.remark">{{item.remark}}</ng-option>
+                                                             </ng-select>
+                                                        </div>
+
+                                                        <div class="mb-3" [formGroup]="formGroupStep7">
+                                                            <label>Note d'expert <span style="color:red">*</span></label>
+                                                            <textarea class="form-textarea min-h-[100px]" formControlName="remark" [ngClass]="{ 'is-invalid': submitted && fStep7['remark'].errors }"
+                                                            name="remark" [(ngModel)]="remark"></textarea>
+                                                            <!-- <input type="text" class="form-input" formControlName="remark" [ngClass]="{ 'is-invalid': submitted && f['remark'].errors }"
+                                                                name="remark" [(ngModel)]="remark" /> -->
+                                                            <div *ngIf="submittedStep7 && fStep7['remark'].errors" class="mt-1">
+                                                                <div *ngIf="submittedStep7 && fStep7['remark'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- <div class="mb-3">
+                                                            <label>Adresse e-mail de l'expert</label>
+                                                            <input type="text" class="form-input" name="expert_email" [(ngModel)]="expert_email"/>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label>Adresse e-mail du réparateur</label>
+                                                            <input type="text" class="form-input" name="repairer_email" [(ngModel)]="repairer_email"/>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label>Adresse e-mail du client</label>
+                                                            <input type="text" class="form-input" name="customer_email" [(ngModel)]="customer_email"/>
+                                                        </div> -->
+
+                                                        <div class="flex justify-center items-center">
+                                                            <button class="btn btn-outline-danger ltr:ml-4 rtl:mr-4" (click)="step6 = !step6; step7 = !step7;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+                                                                </svg>
+                                                                &nbsp;
+                                                                Précédent
+                                                            </button>
+                                                            <button class="btn btn-outline-success ltr:ml-4 rtl:mr-4" (click)="validateStep7();">
+                                                                Suivant
+                                                                &nbsp;
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="row" [hidden]="!step8">
+
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">8/9 - Adresses E-mail</h5>
 
                                                     <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
                                                         <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
@@ -615,10 +773,10 @@
                                                             <div class="grid grid-cols-1 grid-cols-1 gap-1">
                                                                 <div class="mb-3" [formGroup]="emailFormGroup">
                                                                     <label>Adresse e-mail <span style="color:red;">*</span></label>
-                                                                    <input type="email" class="form-input" formControlName="insurer_email" [ngClass]="{ 'is-invalid': submitted && fEmail['insurer_email'].errors }"
-                                                                        name="insurer_email" [(ngModel)]="insurer_email" />
-                                                                    <div *ngIf="submittedEmail && fEmail['insurer_email'].errors" class="mt-1">
-                                                                        <div *ngIf="submittedEmail && fEmail['insurer_email'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                                    <input type="email" class="form-input" formControlName="insured_email" [ngClass]="{ 'is-invalid': submitted && fEmail['insured_email'].errors }"
+                                                                        name="insured_email" [(ngModel)]="insured_email" />
+                                                                    <div *ngIf="submittedEmail && fEmail['insured_email'].errors" class="mt-1">
+                                                                        <div *ngIf="submittedEmail && fEmail['insured_email'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -689,7 +847,7 @@
                                                             <h1 *ngIf="emails.length <= 0" class="text-center items-center p-2">Aucune donnée à afficher</h1>
                                                         </div>
 
-                                                        <div class="grid grid-cols-1 grid-cols-2 gap-2">
+                                                        <div class="grid grid-cols-1 grid-cols-3 gap-3">
                                                             <div style="display: none;">
                                                                 <canvas
                                                                 #canvas
@@ -699,7 +857,7 @@
                                                                 height="200"
                                                                 ></canvas>
                                                             </div>
-                                                            <div class="col-md-4" style="display: none;">
+                                                            <div class="col-md-4">
                                                                 <h6 class="d-flex justify-content-center"><b>Signature de l'expert</b></h6>
                                                                 <canvas
                                                                 #expertCanvas
@@ -717,30 +875,6 @@
                                                                         </svg>
                                                                     </button>
                                                                     <button class="btn btn-success ltr:ml-4 rtl:mr-4" (click)="saveExpertPad()">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                                                        </svg>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <h6 class="d-flex justify-content-center"><b>Signature du réparateur</b></h6>
-                                                                <canvas
-                                                                #repairerCanvas
-                                                                (touchstart)="startDrawing($event)"
-                                                                (touchmove)="moved($event)"
-                                                                width="250"
-                                                                height="150"
-                                                                style="border: 1px solid black; width: 100%;"
-                                                                ></canvas>
-                                                                <p class="error-message" *ngIf="repairerSignatureNeeded">Signature obligatoire</p>
-                                                                <div class="buttons flex justify-center items-center pt-2">
-                                                                    <button class="btn btn-danger ltr:ml-4 rtl:mr-4" (click)="clearRepairerPad()">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                                                        </svg>
-                                                                    </button>
-                                                                    <button class="btn btn-success ltr:ml-4 rtl:mr-4" (click)="saveRepairerPad()">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                                                         </svg>
@@ -771,11 +905,41 @@
                                                                     </button>
                                                                 </div>
                                                             </div>
+                                                            <div class="col-md-4">
+                                                                <h6 class="d-flex justify-content-center"><b>Signature du réparateur</b></h6>
+                                                                <canvas
+                                                                #repairerCanvas
+                                                                (touchstart)="startDrawing($event)"
+                                                                (touchmove)="moved($event)"
+                                                                width="250"
+                                                                height="150"
+                                                                style="border: 1px solid black; width: 100%;"
+                                                                ></canvas>
+                                                                <p class="error-message" *ngIf="repairerSignatureNeeded">Signature obligatoire</p>
+                                                                <div class="buttons flex justify-center items-center pt-2">
+                                                                    <button class="btn btn-danger ltr:ml-4 rtl:mr-4" (click)="clearRepairerPad()">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                                        </svg>
+                                                                    </button>
+                                                                    <button class="btn btn-success ltr:ml-4 rtl:mr-4" (click)="saveRepairerPad()">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                                                        </svg>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="grid grid-cols-1 grid-cols-2 gap-2">
-                                                            <div class="col-md-4" style="display: none;">
+                                                        <div class="grid grid-cols-1 grid-cols-3 gap-3">
+                                                            <div class="col-md-4">
                                                                 <div *ngIf="expertSignatureNeeded === false">
                                                                     <img src="{{ expertSignatureImg }}" alt="" srcset="" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div *ngIf="customerSignatureNeeded === false">
+                                                                    <img src="{{ customerSignatureImg }}" alt="" srcset="" />
                                                                 </div>
                                                             </div>
 
@@ -785,22 +949,17 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-md-4">
-                                                                <div *ngIf="customerSignatureNeeded === false">
-                                                                    <img src="{{ customerSignatureImg }}" alt="" srcset="" />
-                                                                </div>
-                                                            </div>
                                                         </div>
 
                                                         <div class="flex justify-center items-center">
-                                                            <button class="btn btn-outline-danger ltr:ml-4 rtl:mr-4" (click)="step6 = !step6; step7 = !step7;">
+                                                            <button class="btn btn-outline-danger ltr:ml-4 rtl:mr-4" (click)="step7 = !step7; step8 = !step8;">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
                                                                 </svg>
                                                                 &nbsp;
                                                                 Précédent
                                                             </button>
-                                                            <button class="btn btn-outline-success ltr:ml-4 rtl:mr-4" (click)="validateStep7();">
+                                                            <button class="btn btn-outline-success ltr:ml-4 rtl:mr-4" (click)="validateStep8();">
                                                                 Suivant
                                                                 &nbsp;
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -812,9 +971,9 @@
                                                     </div>
 
                                                 </div>
-                                                <div class="row" [hidden]="!step8">
+                                                <div class="row" [hidden]="!step9">
 
-                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">8/8 - Récapitulation</h5>
+                                                    <h5 class="font-bold text-lg p-5 flex justify-center items-center">8/9 - Récapitulation</h5>
 
                                                     <div class="grid grid-cols-1 grid-cols-1 gap-1" style="padding-left: 10%; padding-right: 10%;">
                                                         <div class="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
@@ -831,7 +990,10 @@
                                                                       <center><img src="assets/images/logo_eg.jpg" width="150" height="25" alt="logo"></center>
                                                                     </th>
                                                                     <th scope="col">FICHE D'EXPERTISE</th>
-                                                                    <th scope="col">DATE: {{ dateNow | date: 'dd/MM/yyyy' }}</th>
+                                                                    <th scope="col">
+                                                                        DATE: {{ dateNow | date: 'dd/MM/yyyy' }}
+                                                                        <center><img src="{{qr_code}}" width="150" height="25" alt="logo"></center>
+                                                                    </th>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -872,6 +1034,8 @@
                                                                       <div class="p-2 bd-highlight">NOM : <b>{{client_name}}</b></div>
                                                                       <div class="p-2 bd-highlight">CONTACT : <b>{{client_phone}}</b></div>
                                                                       <div class="p-2 bd-highlight">E-MAIL : <b>{{client_email}}</b></div>
+                                                                      <div class="p-2 bd-highlight">Assureur : <b>{{insurer_name}}</b></div>
+                                                                      <div class="p-2 bd-highlight">Numéro de sinistre : <b>{{disaster_number}}</b></div>
                                                                   </div>
                                                               </td>
                                                               </tr>
@@ -915,49 +1079,52 @@
                                                         </table>
                                                     </div>
 
-                                                    <div class="text-left d-flex flex-column bd-highlight mb-3">
-                                                        <div class="p-2 bd-highlight"><b>POINT DE CHOC</b> :
-                                                            <p>{{shock_point_label}}</p>
+                                                    <div *ngFor="let shock_point of shock_points; let i = index">
+                                                        <div class="text-left d-flex flex-column bd-highlight mt-3 mb-2">
+                                                            <div class="p-2 bd-highlight"><b>POINT DE CHOC</b> : {{shock_point.shock_point_label}}
+                                                            </div>
                                                         </div>
-                                                    </div>
-
-                                                    <div class="table-responsive">
-                                                        <table>
-                                                            <tbody style="background-color: rgb(223, 221, 218);">
-                                                              <tr>
-                                                                <th colspan="6" scope="col">TRAVAUX A FAIRE SOUS RESERVE DE DEMONTAGE</th>
-                                                              </tr>
-                                                            </tbody>
-                                                            <tbody>
-                                                                <tr>
-                                                                  <th scope="col">N°</th>
-                                                                  <th scope="col">DESIGNATION</th>
-                                                                  <th scope="col">REMPLACEMENT</th>
-                                                                  <th scope="col">REPARATION</th>
-                                                                  <th scope="col">PEINDRE</th>
-                                                                  <th scope="col">CONTRÔLE</th>
-                                                                </tr>
-                                                              </tbody>
-                                                            <tbody *ngIf="works.length > 0">
-                                                              <tr *ngFor="let item of works; let i = index">
-                                                                <td>{{ i+1 }}</td>
-                                                                <td>{{item.designation_label}}</td>
-                                                                <td>
-                                                                    <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.replacement == 1"></i>
-                                                                </td>
-                                                                <td>
-                                                                    <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.repair == 1"></i>
-                                                                </td>
-                                                                <td>
-                                                                    <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.paint == 1"></i>
-                                                                </td>
-                                                                <td>
-                                                                    <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.control == 1"></i>
-                                                                </td>
-                                                              </tr>
-                                                            </tbody>
-                                                            <h1 *ngIf="works.length <= 0" class="text-center items-center p-2" style="text-align: center;">Aucune donnée à afficher</h1>
-                                                        </table>
+    
+                                                        <div class="table-responsive">
+                                                            <table>
+                                                                <tbody style="background-color: rgb(223, 221, 218);">
+                                                                  <tr>
+                                                                    <th colspan="6" scope="col">TRAVAUX A FAIRE SOUS RESERVE DE DEMONTAGE</th>
+                                                                  </tr>
+                                                                </tbody>
+                                                                <tbody>
+                                                                    <tr>
+                                                                      <th scope="col">N°</th>
+                                                                      <th scope="col">DESIGNATION</th>
+                                                                      <th scope="col">REMPLACEMENT</th>
+                                                                      <th scope="col">REPARATION</th>
+                                                                      <th scope="col">PEINDRE</th>
+                                                                      <th scope="col">CONTRÔLE</th>
+                                                                    </tr>
+                                                                  </tbody>
+                                                                <tbody *ngIf="shock_point.works.length > 0">
+                                                                  <tr *ngFor="let work of shock_point.works; let i = index">
+                                                                    <td>{{ i+1 }}</td>
+                                                                    <td>{{work.designation_label}}</td>
+                                                                    <td>
+                                                                        <i class="fa fa-check-circle" aria-hidden="true" *ngIf="work.replacement == 1"></i>
+                                                                    </td>
+                                                                    <td>
+                                                                        <i class="fa fa-check-circle" aria-hidden="true" *ngIf="work.repair == 1"></i>
+                                                                    </td>
+                                                                    <td>
+                                                                        <i class="fa fa-check-circle" aria-hidden="true" *ngIf="work.paint == 1"></i>
+                                                                    </td>
+                                                                    <td>
+                                                                        <i class="fa fa-check-circle" aria-hidden="true" *ngIf="work.control == 1"></i>
+                                                                    </td>
+                                                                  </tr>
+                                                                </tbody>
+                                                                <h1 *ngIf="shock_point.works.length <= 0" class="text-center works-center p-2" style="text-align: center;">Aucune donnée à afficher</h1>
+                                                            </table>
+                                                        </div>
+                                                        <br>
+                                                        <hr>
                                                     </div>
 
                                                     <div class="text-left d-flex flex-column bd-highlight mt-3 mb-3" style="background-color: rgb(223, 221, 218);">
@@ -969,10 +1136,10 @@
                                                             <tbody>
                                                                 <tr>
                                                                     <th scope="col">
-                                                                        CLIENT
+                                                                        EXPERT
                                                                     </th>
                                                                     <th scope="col">
-                                                                        EXPERT
+                                                                        CLIENT
                                                                     </th>
                                                                     <th scope="col">
                                                                         REPARATEUR
@@ -982,17 +1149,20 @@
                                                             <tbody>
                                                                 <tr>
                                                                     <td scope="col">
+                                                                        <div *ngIf="!expertSignatureImg">
+                                                                            <img src="assets/images/wbg.png" width="190" height="70" alt="expert_signature">
+                                                                        </div>
+                                                                        <div *ngIf="expertSignatureImg">
+                                                                          <img src="{{expertSignatureImg}}" width="190" height="70" alt="expert_signature">
+                                                                      </div>
+                                                                    </td>
+                                                                    <td scope="col">
                                                                         <div *ngIf="!customerSignatureImg">
                                                                             <img src="assets/images/wbg.png" width="190" height="70" alt="customer_signature">
                                                                         </div>
                                                                         <div *ngIf="customerSignatureImg">
                                                                           <img src="{{customerSignatureImg}}" width="190" height="70" alt="customer_signature">
                                                                       </div>
-                                                                    </td>
-                                                                    <td scope="col" class="text-center">
-                                                                        <div *ngIf="user_logged">
-                                                                            <img src="{{uploadLink}}/storage/signature/{{user_logged.signature}}" width="190" height="70" alt="expert_signature">
-                                                                        </div>
                                                                     </td>
                                                                     <td scope="col">
                                                                         <div *ngIf="!repairerSignatureImg">

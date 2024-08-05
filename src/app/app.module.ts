@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { NgxCaptchaModule } from 'ngx-captcha';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgxEditorModule } from 'ngx-editor';
+import { QRCodeModule } from 'angularx-qrcode';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -52,6 +53,9 @@ import { ListColorComponent } from './components/app-content/color/list-color/li
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { AddClientComponent } from './components/app-content/client/add-client/add-client.component';
 import { ListClientComponent } from './components/app-content/client/list-client/list-client.component';
+import { ListInsurerComponent } from './components/app-content/insurer/list-insurer/list-insurer.component';
+import { PrensentationComponent } from './components/prensentation/prensentation.component';
+import { QrcodeComponent } from './components/qrcode/qrcode.component';
 
 @NgModule({
   declarations: [
@@ -83,6 +87,9 @@ import { ListClientComponent } from './components/app-content/client/list-client
     ListColorComponent,
     AddClientComponent,
     ListClientComponent,
+    ListInsurerComponent,
+    PrensentationComponent,
+    QrcodeComponent,
   ],
   imports: [
     BrowserModule,
@@ -101,6 +108,7 @@ import { ListClientComponent } from './components/app-content/client/list-client
     NgxCaptchaModule,
     NgxEditorModule,
     NgxExtendedPdfViewerModule,
+    QRCodeModule,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,

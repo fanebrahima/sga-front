@@ -6,16 +6,16 @@
             <div x-data="sales">
                 <ul class="flex space-x-2 rtl:space-x-reverse">
                     <li>
-                        <a href="javascript:;" class="text-primary hover:underline">Désignation</a>
+                        <a href="javascript:;" class="text-primary hover:underline">Qr codes</a>
                     </li>
                     <li class="before:content-['/'] ltr:before:mr-1 rtl:before:ml-1">
-                        <span>Liste des désignations</span>
+                        <span>Liste des Qr Codes</span>
                     </li>
                 </ul>
     
                 <div class="pt-5" *ngIf="!itemSelected && !addItem">
                     <div class="flex items-center justify-between flex-wrap gap-4">
-                        <h2 class="text-xl">Liste des désignations</h2>
+                        <h2 class="text-xl">Liste des Qr Codes</h2>
                         <div class="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
                             <div class="flex gap-3">
                                 <div class="relative ">
@@ -36,7 +36,7 @@
                                             <line x1="12" y1="5" x2="12" y2="19"></line>
                                             <line x1="5" y1="12" x2="19" y2="12"></line>
                                         </svg>
-                                        Nouvelle désignation
+                                        Nouveau Qr Code
                                     </button>
                                 </div>
                             </div>
@@ -49,6 +49,7 @@
                                 <tr>
                                     <th>N°</th>
                                     <th>Action</th>
+                                    <th>Qr Code</th>
                                     <th>Libellé</th>
                                     <th>Date de création</th>
                                     <th>Statut</th>
@@ -72,17 +73,6 @@
                                                     </svg>
                                                 </a>
                                             </li>                                            
-                                            <li>
-                                                <a (click)="itemEdit(item)" x-tooltip="Modifier">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 text-success">
-                                                        <path
-                                                            d="M15.2869 3.15178L14.3601 4.07866L5.83882 12.5999L5.83881 12.5999C5.26166 13.1771 4.97308 13.4656 4.7249 13.7838C4.43213 14.1592 4.18114 14.5653 3.97634 14.995C3.80273 15.3593 3.67368 15.7465 3.41556 16.5208L2.32181 19.8021L2.05445 20.6042C1.92743 20.9852 2.0266 21.4053 2.31063 21.6894C2.59466 21.9734 3.01478 22.0726 3.39584 21.9456L4.19792 21.6782L7.47918 20.5844L7.47919 20.5844C8.25353 20.3263 8.6407 20.1973 9.00498 20.0237C9.43469 19.8189 9.84082 19.5679 10.2162 19.2751C10.5344 19.0269 10.8229 18.7383 11.4001 18.1612L11.4001 18.1612L19.9213 9.63993L20.8482 8.71306C22.3839 7.17735 22.3839 4.68748 20.8482 3.15178C19.3125 1.61607 16.8226 1.61607 15.2869 3.15178Z"
-                                                            stroke="currentColor" stroke-width="1.5" />
-                                                        <path opacity="0.5" d="M14.36 4.07812C14.36 4.07812 14.4759 6.04774 16.2138 7.78564C17.9517 9.52354 19.9213 9.6394 19.9213 9.6394M4.19789 21.6777L2.32178 19.8015" stroke="currentColor"
-                                                            stroke-width="1.5" />
-                                                    </svg>
-                                                </a>
-                                            </li>
                                             <li *ngIf="item.status_id == 2">
                                                 <a href="javascript:;" x-tooltip="Activer" (click)="itemAble(item)">
                                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-success">
@@ -91,17 +81,22 @@
                                                     </svg>
                                                 </a>
                                             </li>
-                                            <li *ngIf="item.status_id == 1">
+                                            <!-- <li *ngIf="item.status_id == 1">
                                                 <a href="javascript:;" x-tooltip="Désactiver" (click)="itemDisable(item)">
                                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 m-auto text-danger">
                                                         <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" />
                                                         <path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                                                     </svg>
                                                 </a>
-                                            </li>
+                                            </li> -->
                                         </ul>
                                     </td>
-                                    <td>{{item.label}}</td>
+                                    <td>
+                                        <div class="user-pro-img">
+                                            <img id="blah" src="{{item.qr_code}}" alt="Signature" />
+                                        </div>
+                                    </td>
+                                    <td>{{item.code}}</td>
                                     <td>{{item.created_at | date: 'dd/MM/yyyy'}} à {{ item.created_at | date: 'HH:mm:ss' }}</td>
                                     <td> 
                                         <span class="badge bg-success" *ngIf="item.status_id == 1">{{item.status_label}}</span>
@@ -194,7 +189,7 @@
                         <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="open && '!block'">
                             <div class="flex items-start justify-center min-h-screen px-4">
                                 <div x-show="open" x-transition x-transition.duration.300 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-5xl my-8">
-                                    <h5 class="font-bold text-lg p-5">Ajout d'une désignation</h5>
+                                    <h5 class="font-bold text-lg p-5">Ajout d'un Qr Code</h5>
                                     <div class="p-5">
                                         <form class="space-y-5" style="padding-bottom: 100px;">
                                             <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist_error">
@@ -202,12 +197,26 @@
                                             </div>
                                             <div class="grid grid-cols-1 grid-cols-1 gap-1">
                                                 <div class="mb-3" [formGroup]="formGroupAdd">
-                                                    <label>Libellé <span style="color:red">*</span></label>
-                                                    <input type="text" class="form-input" formControlName="label" [ngClass]="{ 'is-invalid': submitted && f['label'].errors }"
-                                                        name="label" [(ngModel)]="label" />
-                                                    <div *ngIf="submitted && f['label'].errors" class="mt-1">
-                                                        <div *ngIf="submitted && f['label'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
+                                                    <label>Code <span style="color:red">*</span></label>
+                                                    <input type="text" class="form-input" formControlName="code" [ngClass]="{ 'is-invalid': submitted && f['code'].errors }"
+                                                        name="code" [(ngModel)]="code" />
+                                                    <div *ngIf="submitted && f['code'].errors" class="mt-1">
+                                                        <div *ngIf="submitted && f['code'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
                                                     </div>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <qrcode (qrCodeURL)="onChangeURL($event)" [qrdata]="code" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+                                                    <a [href]="qrCodeDownloadLink" download="qrcode">Download</a>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label>Qr Code</label>
+                                                    <div class="user-pro-img">
+                                                        <img id="blah" [src]="qrCodeSrc || 'assets/images/no-picture.png'" alt="QrCode" />
+                                                    </div>
+                                                    <br>
+                                                    <input type="file" accept="image/*" [(ngModel)]="qrCodeFiles" class="form-input file:py-2 file:px-4 file:border-0 file:font-semibold p-0 file:bg-primary/90 ltr:file:mr-5 rtl:file-ml-5 file:text-white file:hover:bg-primary" name="qrCodeFiles" (change)="onSelectQrCode($event)" id="customFileLang" lang="fr">
                                                 </div>
                                             </div>
                 
@@ -235,106 +244,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="pt-5" *ngIf="itemSelected && editItem">
-                    <div class="row mb-5">
-                        <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="open && '!block'">
-                            <div class="flex items-start justify-center min-h-screen px-4">
-                                <div x-show="open" x-transition x-transition.duration.300 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-5xl my-8">
-                                    <h5 class="font-bold text-lg p-5">Modification de {{itemSelected.label}}</h5>
-                                    <div class="p-5">
-                                        <form class="space-y-5" style="padding-bottom: 100px;" (submit)="update()">
-                                            <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngIf="exist_error">
-                                                <span class="ltr:pr-2 rtl:pl-2">{{error_message}}</span><br>
-                                            </div>
-                                            <div class="grid grid-cols-1 grid-cols-1 gap-1">
-                                                <div class="mb-3" [formGroup]="formGroupEdit">
-                                                    <label>Libellé <span style="color:red">*</span></label>
-                                                    <input type="text" class="form-input" formControlName="label" [ngClass]="{ 'is-invalid': submitted2 && f2['label'].errors }"
-                                                        name="label" [(ngModel)]="label" />
-                                                    <div *ngIf="submitted2 && f2['label'].errors" class="mt-1">
-                                                        <div *ngIf="submitted2 && f2['label'].errors?.['required']" class="text-danger">Ce champ est requis !</div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                
-                                            <div class="flex justify-end items-center mt-8">
-                                                <button type="button" (click)="resetAll(); itemSelected = !itemSelected" class="btn btn-outline-danger">Annuler</button>
-                                                <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submit" *ngIf="!submit">Enregistrer</button>
-                                                <button type="button" class="btn btn-primary ltr:ml-4 rtl:mr-4" [disabled]="submit" *ngIf="submit">
-                                                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-[spin_2s_linear_infinite] inline-block align-middle ltr:mr-2 rtl:ml-2">
-                                                        <line x1="12" y1="2" x2="12" y2="6"></line>
-                                                        <line x1="12" y1="18" x2="12" y2="22"></line>
-                                                        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
-                                                        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
-                                                        <line x1="2" y1="12" x2="6" y2="12"></line>
-                                                        <line x1="18" y1="12" x2="22" y2="12"></line>
-                                                        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
-                                                        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
-                                                    </svg>
-                                                    Patientez ...
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="pt-5" *ngIf="itemSelected && itemDetail">
-                    <div class="row mb-5">
-                        <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="open && '!block'">
-                            <div class="flex items-start justify-center min-h-screen px-4">
-                                <div x-show="open" x-transition x-transition.duration.300 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-5xl my-8">
-                                    <h5 class="font-bold text-lg p-5">Détails de {{itemSelected.label}}</h5>
-                                    <div class="p-5">
-                                        <div class="table-responsive">
-                                            <table class="table-hover">
-                                                <tbody>
-                                                    <tr>
-                                                        <th>Libellé</th>
-                                                        <td>{{itemSelected.label}}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Statut</th>
-                                                        <td> 
-                                                            <span class="badge badge-outline-success" *ngIf="itemSelected.status_id == 1">{{itemSelected.status_label}}</span>
-                                                            <span class="badge badge-outline-danger" *ngIf="itemSelected.status_id == 2">{{itemSelected.status_label}}</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Ajouté(e) par</th>
-                                                        <td>{{itemSelected.user_last_name}} {{itemSelected.user_first_name}}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Date de création</th>
-                                                        <td>{{itemSelected.created_at | date: 'dd/MM/yyyy'}} à {{ itemSelected.created_at | date: 'HH:mm:ss' }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <div class="flex justify-end items-center mt-8">
-                                                <button type="button" (click)="itemSelected = !itemSelected" class="btn btn-outline-danger">Fermer</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="pt-5" *ngIf="itemSelected && ableItem">
                     <div class="row mb-5">
                         <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="open && '!block'">
                             <div class="flex items-start justify-center min-h-screen px-4">
                                 <div x-show="open" x-transition x-transition.duration.300 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-5xl my-8">
-                                    <h5 class="font-bold text-lg p-5">Activation de {{itemSelected.label}}</h5>
+                                    <h5 class="font-bold text-lg p-5">Activation de {{itemSelected.code}}</h5>
                                     <div class="p-5">
                                         <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngFor="let item of error_message; let i = index;">
                                             <span *ngIf="error_message.length > 0" class="ltr:pr-2 rtl:pl-2">{{item.detail}}</span><br>
                                         </div>
                                         <div class="flex justify-center items-center mt-8">
-                                            Voulez-vous activer &nbsp; <b>{{itemSelected.label}}</b> &nbsp; ?
+                                            Voulez-vous activer &nbsp; <b>{{itemSelected.code}}</b> &nbsp; ?
                                         </div>
                                         <div class="flex justify-end items-center mt-8">
                                             <button type="button" (click)="resetAll(); itemSelected = !itemSelected" class="btn btn-outline-danger">Non</button>
@@ -364,13 +285,13 @@
                         <div class="fixed inset-0 bg-[black]/60 z-[999]  hidden" :class="open && '!block'">
                             <div class="flex items-start justify-center min-h-screen px-4">
                                 <div x-show="open" x-transition x-transition.duration.300 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-5xl my-8">
-                                    <h5 class="font-bold text-lg p-5">Désactivation de {{itemSelected.label}}</h5>
+                                    <h5 class="font-bold text-lg p-5">Désactivation de {{itemSelected.code}}</h5>
                                     <div class="p-5">
                                         <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light" *ngFor="let item of error_message; let i = index;">
                                             <span *ngIf="error_message.length > 0" class="ltr:pr-2 rtl:pl-2">{{item.detail}}</span><br>
                                         </div>
                                         <div class="flex justify-center items-center mt-8">
-                                            Voulez-vous désactiver &nbsp; <b>{{itemSelected.label}}</b> &nbsp; ?
+                                            Voulez-vous désactiver &nbsp; <b>{{itemSelected.code}}</b> &nbsp; ?
                                         </div>
                                         <div class="flex justify-end items-center mt-8">
                                             <button type="button" (click)="resetAll(); itemSelected = !itemSelected" class="btn btn-outline-danger">Non</button>

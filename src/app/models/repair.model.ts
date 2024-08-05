@@ -7,16 +7,23 @@ export class Repair {
     remark!:string;
     amount!:number;
     works!:any;
+    shock_points!:any;
     emails!:any;
     expert_email!:string;
     repairer_email!:string;
     customer_email!:string;
-    insurer_email!:string;
+    insured_email!:string;
     expert_signature!:any;
     repairer_signature!:any;
     customer_signature!:any;
 
-    name!:string;
-    phone!:string;
-    email!:string;
+    client_name!:string;
+    client_phone!:string;
+    client_email!:string;
+
+    insurer_name!:string;
+    insurer_phone!:string;
+    insurer_email!:string;
+
+    disaster_number!:string;
 }

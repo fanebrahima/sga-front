@@ -24,6 +24,9 @@ import { ListVehicleModelComponent } from './components/app-content/vehicle-mode
 import { ListColorComponent } from './components/app-content/color/list-color/list-color.component';
 import { ListClientComponent } from './components/app-content/client/list-client/list-client.component';
 import { AddClientComponent } from './components/app-content/client/add-client/add-client.component';
+import { ListInsurerComponent } from './components/app-content/insurer/list-insurer/list-insurer.component';
+import { PrensentationComponent } from './components/prensentation/prensentation.component';
+import { QrcodeComponent } from './components/qrcode/qrcode.component';
 
 const routes: Routes = [
   {
@@ -108,6 +111,12 @@ const routes: Routes = [
   },
 
   {
+    path:'list-insurer',
+    component: ListInsurerComponent,
+    canActivate: [AfterLoginService]
+  },
+
+  {
     path:'list-vehicle',
     component: ListVehicleComponent,
     canActivate: [AfterLoginService]
@@ -155,6 +164,18 @@ const routes: Routes = [
   {
     path:'list-color',
     component: ListColorComponent,
+    canActivate: [AfterLoginService]
+  },
+
+  {
+    path:'presentation',
+    component: PrensentationComponent,
+    canActivate: [AfterLoginService]
+  },
+
+  {
+    path:'qr-code',
+    component: QrcodeComponent,
     canActivate: [AfterLoginService]
   },
 

@@ -19,6 +19,7 @@ import { UserService } from 'src/app/services/app-content/user.service';
 import { RepairService } from 'src/app/services/app-content/repair.service';
 import { Email } from 'src/app/models/insurer-email.model';
 import { Repair } from 'src/app/models/repair.model';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 
 @Component({
@@ -172,6 +173,9 @@ export class ListRepairComponent implements OnInit {
   signatureSrc!: string;
   signature: string ="";
 
+  public qrCodeDownloadLink: SafeUrl = "";
+  qr_code: string ="";
+
   constructor(
     public Jarwis: JarwisService,
     public repairService: RepairService,
@@ -276,6 +280,44 @@ export class ListRepairComponent implements OnInit {
     this.control = 0;
   }
 
+  onChangeURL(url: SafeUrl) {
+    this.qrCodeDownloadLink = 'https://sga-back.ddev.site/storage/repair/FTS2024_080418_0137.pdf';
+    console.log('azerty',this.qrCodeDownloadLink);
+  }
+
+  downloadRepair(item:any) {
+    console.log(item.reference);
+    this.repairService.downloadRepair(item.reference).subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = item.reference+'.pdf'; // Adjust file name as needed
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, error => {
+      console.error('Download failed', error);
+    });
+  }
+
+  downloadPhoto(item:any) {
+    console.log(item);
+    this.repairService.downloadPhoto(item).subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = item+'.png'; // Adjust file name as needed
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, error => {
+      console.error('Download failed', error);
+    });
+  }
+
+  
   downloadFile(reference:any,license_plate:any){
 
     var url = this.downloadLink.concat("/storage/repair/").concat(reference).concat(".pdf");
@@ -446,8 +488,8 @@ export class ListRepairComponent implements OnInit {
     this.amount = this.itemSelected.amount;
     this.status_id = this.itemSelected.status_id;
     this.repairService.getRepairById(this.itemSelected.id).subscribe((data: any) => {
-      this.listRepairWork = data.repair_works;
       this.repairEmails = data.emails;
+      this.qr_code = data.qr_code.qr_code;
       this.saveEmails();
       this.SpinnerService.hide();
     })

@@ -77,6 +77,14 @@ export class RepairService {
     return this.http.post<Repair>(`${this.baseUrl}/repair/disable`, data, {headers: this.herdersService.header()}).pipe(catchError(err => { return throwError(err); }));
   }
 
+  downloadRepair(reference: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/repair/download_repair/${reference}`, {headers: this.herdersService.header(),responseType: 'blob' as 'json'});
+  }
+
+  downloadPhoto(reference: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/repair/download_photo/${reference}`, {headers: this.herdersService.header(),responseType: 'blob' as 'json'});
+  }
+
   errorHandler<T>(operation: any, result?: T) {
     return (error: any): Observable<T> => {
       //console.log(error); // pour afficher dans la console

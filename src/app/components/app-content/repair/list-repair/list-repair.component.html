@@ -51,6 +51,7 @@
                                     <th>Action</th>
                                     <th>Référence</th>
                                     <th>N° Immatriculation</th>
+                                    <th>N° Sinistre</th>
                                     <th>Marque</th>
                                     <th>Modèle</th>
                                     <th>Réparateur</th>
@@ -93,34 +94,28 @@
                                             </li>
                                             <li>
                                               <div class="grid place-content-center w-14 h-14 border border-white-dark/20 dark:border-[#191e3a] rounded-md">
-                                                <a x-tooltip="Télécharger" href="{{downloadLink}}/storage/repair/{{item.reference}}.pdf"  download="bdhhd" target="_blank">
+                                                <a x-tooltip="Télécharger" (click)="downloadRepair(item)"  target="_blank">
                                                     <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" style="width: 18px;">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                                     </svg>
                                                 </a>
                                               </div>
                                             </li>
-                                            <!-- <li>
-                                                <a x-tooltip="Télécharger" (click)="downloadFile(item.reference,item.vehicle_license_plate)" target="_blank">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" style="width: 18px;">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                                                    </svg>
-                                                </a>
-                                            </li> -->
                                         </ul>
                                     </td>
                                     <td>{{ item.reference }}</td>
-                                    <td>{{ item.vehicle_license_plate }}</td>
-                                    <td>{{ item.brand_label }}</td>
-                                    <td>{{ item.vehicle_model }}</td>
-                                    <td>{{ item.repairer_name }}</td>
-                                    <td>{{ item.user_last_name }} {{ item.user_first_name }}</td>
+                                    <td>{{ item.vehicle.license_plate }}</td>
+                                    <td>{{ item.disaster_number }}</td>
+                                    <td>{{ item.vehicle.brand.label }}</td>
+                                    <td>{{ item.vehicle.model }}</td>
+                                    <td>{{ item.repairer.name }}</td>
+                                    <td>{{ item.user.last_name }} {{ item.user.first_name }}</td>
                                     <td>{{item.created_at | date: 'dd/MM/yyyy'}} à {{ item.created_at | date: 'HH:mm:ss' }}</td>
                                     <td>
-                                        <span class="badge bg-warning" *ngIf="item.status_id == 3">{{item.status_label}}</span>
-                                        <span class="badge bg-dark" *ngIf="item.status_id == 4">{{item.status_label}}</span>
-                                        <span class="badge bg-info" *ngIf="item.status_id == 5">{{item.status_label}}</span>
-                                        <span class="badge bg-success" *ngIf="item.status_id == 6">{{item.status_label}}</span>
+                                        <span class="badge bg-warning" *ngIf="item.status.id == 3">{{item.status.label}}</span>
+                                        <span class="badge bg-dark" *ngIf="item.status.id == 4">{{item.status.label}}</span>
+                                        <span class="badge bg-info" *ngIf="item.status.id == 5">{{item.status.label}}</span>
+                                        <span class="badge bg-success" *ngIf="item.status.id == 6">{{item.status.label}}</span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -361,7 +356,10 @@
                                                           <center><img src="assets/images/logo_eg.jpg" width="150" height="25" alt="logo"></center>
                                                         </th>
                                                         <th scope="col" class="fileStyle">FICHE D'EXPERTISE</th>
-                                                        <th scope="col" class="fileStyle">DATE: {{ itemSelected.created_at | date: 'dd/MM/yyyy' }}</th>
+                                                        <th scope="col" class="fileStyle">
+                                                            DATE: {{ itemSelected.created_at | date: 'dd/MM/yyyy' }}
+                                                            <center><img src="{{qr_code}}" width="150" height="25" alt="logo"></center>
+                                                        </th>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -385,23 +383,25 @@
                                                   <tr class="fileStyle">
                                                     <td class="fileStyle">
                                                         <div class="text-left d-flex flex-column bd-highlight mb-3" style="text-align: left;">
-                                                            <div class="p-2 bd-highlight">NOM : <b>{{itemSelected.user_last_name}} {{itemSelected.user_first_name}}</b></div>
-                                                            <div class="p-2 bd-highlight">CONTACT : <b>{{itemSelected.user_email}}</b></div>
-                                                            <div class="p-2 bd-highlight">E-MAIL : <b>{{itemSelected.user_email}}</b></div>
+                                                            <div class="p-2 bd-highlight">NOM : <b>{{itemSelected.user.last_name}} {{itemSelected.user.first_name}}</b></div>
+                                                            <div class="p-2 bd-highlight">CONTACT : <b>{{itemSelected.user.email}}</b></div>
+                                                            <div class="p-2 bd-highlight">E-MAIL : <b>{{itemSelected.user.email}}</b></div>
                                                         </div>
                                                     </td>
                                                     <td class="fileStyle">
                                                         <div class="text-left d-flex flex-column bd-highlight mb-3" style="text-align: left;">
-                                                            <div class="p-2 bd-highlight">NOM : <b>{{itemSelected.repairer_name}}</b></div>
-                                                            <div class="p-2 bd-highlight">CONTACT : <b>{{itemSelected.repairer_phone}}</b></div>
-                                                            <div class="p-2 bd-highlight">E-MAIL : <b>{{itemSelected.repairer_email}}</b></div>
+                                                            <div class="p-2 bd-highlight">NOM : <b>{{itemSelected.repairer.name}}</b></div>
+                                                            <div class="p-2 bd-highlight">CONTACT : <b>{{itemSelected.repairer.phone}}</b></div>
+                                                            <div class="p-2 bd-highlight">E-MAIL : <b>{{itemSelected.repairer.email}}</b></div>
                                                         </div>
                                                     </td>
                                                     <td class="fileStyle">
                                                       <div class="text-left d-flex flex-column bd-highlight mb-3" style="text-align: left;">
-                                                          <div class="p-2 bd-highlight">NOM : <b>{{itemSelected.client_name}}</b></div>
-                                                          <div class="p-2 bd-highlight">CONTACT : <b>{{itemSelected.client_phone}}</b></div>
-                                                          <div class="p-2 bd-highlight">E-MAIL : <b>{{itemSelected.client_email}}</b></div>
+                                                          <div class="p-2 bd-highlight">NOM : <b>{{itemSelected.client.name}}</b></div>
+                                                          <div class="p-2 bd-highlight">CONTACT : <b>{{itemSelected.client.phone}}</b></div>
+                                                          <div class="p-2 bd-highlight">E-MAIL : <b>{{itemSelected.client.email}}</b></div>
+                                                          <div class="p-2 bd-highlight">Assureur : <b>{{itemSelected.insurer.name}}</b></div>
+                                                          <div class="p-2 bd-highlight">Numéro de sinistre : <b>{{itemSelected.disaster_number}}</b></div>
                                                       </div>
                                                   </td>
                                                   </tr>
@@ -431,66 +431,69 @@
                                                 </tbody>
                                                 <tbody class="fileStyle">
                                                   <tr class="fileStyle">
-                                                    <td class="fileStyle">{{itemSelected.vehicle_license_plate}}</td>
-                                                    <td class="fileStyle">{{itemSelected.brand_label}}</td>
+                                                    <td class="fileStyle">{{itemSelected.vehicle.license_plate}}</td>
+                                                    <td class="fileStyle">{{itemSelected.vehicle.brand.label}}</td>
                                                     <td class="fileStyle">
-                                                        {{itemSelected.vehicle_model}}
-                                                        <span *ngIf="itemSelected.vehicle_type"> - {{itemSelected.vehicle_type}}</span>
-                                                        <span *ngIf="itemSelected.vehicle_option"> - {{itemSelected.vehicle_option}}</span>
+                                                        {{itemSelected.vehicle.model}}
+                                                        <span *ngIf="itemSelected.vehicle_type"> - {{itemSelected.vehicle.type}}</span>
+                                                        <span *ngIf="itemSelected.vehicle_option"> - {{itemSelected.vehicle.option}}</span>
                                                     </td>
-                                                    <td class="fileStyle">{{itemSelected.color_label}}</td>
-                                                    <td class="fileStyle">{{itemSelected.vehicle_mileage}} km</td>
+                                                    <td class="fileStyle">{{itemSelected.vehicle.color.label}}</td>
+                                                    <td class="fileStyle">{{itemSelected.vehicle.mileage}} km</td>
                                                   </tr>
                                                 </tbody>
                                             </table>
                                         </div>
 
-                                        <div class="text-left d-flex flex-column bd-highlight mb-3">
-                                            <div class="p-2 bd-highlight"><b>POINT DE CHOC</b> : {{itemSelected.shock_point_label}}</div>
+                                        <div *ngFor="let shock of itemSelected.shocks; let i = index">
+                                            <div class="text-left d-flex flex-column bd-highlight mt-3 mb-2">
+                                                <div class="p-2 bd-highlight"><b>POINT DE CHOC</b> : {{shock.shock_point.label}}</div>
+                                            </div>
+    
+                                            <div class="table-responsive">
+                                                <table class="fileStyle">
+                                                    <tbody class="fileStyle" style="background-color: rgb(223, 221, 218);">
+                                                      <tr class="fileStyle">
+                                                        <th colspan="6" scope="col" class="fileStyle">TRAVAUX A FAIRE SOUS RESERVE DE DEMONTAGE</th>
+                                                      </tr>
+                                                    </tbody>
+                                                    <tbody class="fileStyle">
+                                                        <tr class="fileStyle">
+                                                          <th scope="col" class="fileStyle">N°</th>
+                                                          <th scope="col" class="fileStyle">DESIGNATION</th>
+                                                          <th scope="col" class="fileStyle">REMPLACEMENT</th>
+                                                          <th scope="col" class="fileStyle">REPARATION</th>
+                                                          <th scope="col" class="fileStyle">PEINDRE</th>
+                                                          <th scope="col" class="fileStyle">CONTRÔLE</th>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tbody class="fileStyle" *ngIf="shock.repair_works.length > 0">
+                                                      <tr class="fileStyle" *ngFor="let item of shock.repair_works; let i = index">
+                                                        <td class="fileStyle">{{ i+1 }}</td>
+                                                        <td class="fileStyle">{{item.designation.label}}</td>
+                                                        <td class="fileStyle">
+                                                            <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.replacement == 1"></i>
+                                                        </td>
+                                                        <td class="fileStyle">
+                                                            <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.repair == 1"></i>
+                                                        </td>
+                                                        <td class="fileStyle">
+                                                            <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.paint == 1"></i>
+                                                        </td>
+                                                        <td class="fileStyle">
+                                                            <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.control == 1"></i>
+                                                        </td>
+                                                      </tr>
+                                                    </tbody>
+                                                    <h1 *ngIf="shock.repair_works.length <= 0" class="text-center items-center p-2" style="text-align: center;">Aucune donnée à afficher</h1>
+                                                </table>
+                                            </div>
                                         </div>
 
-                                        <div class="table-responsive">
-                                            <table class="fileStyle">
-                                                <tbody class="fileStyle" style="background-color: rgb(223, 221, 218);">
-                                                  <tr class="fileStyle">
-                                                    <th colspan="6" scope="col" class="fileStyle">TRAVAUX A FAIRE SOUS RESERVE DE DEMONTAGE</th>
-                                                  </tr>
-                                                </tbody>
-                                                <tbody class="fileStyle">
-                                                    <tr class="fileStyle">
-                                                      <th scope="col" class="fileStyle">N°</th>
-                                                      <th scope="col" class="fileStyle">DESIGNATION</th>
-                                                      <th scope="col" class="fileStyle">REMPLACEMENT</th>
-                                                      <th scope="col" class="fileStyle">REPARATION</th>
-                                                      <th scope="col" class="fileStyle">PEINDRE</th>
-                                                      <th scope="col" class="fileStyle">CONTRÔLE</th>
-                                                    </tr>
-                                                </tbody>
-                                                <tbody class="fileStyle" *ngIf="listRepairWork.length > 0">
-                                                  <tr class="fileStyle" *ngFor="let item of listRepairWork; let i = index">
-                                                    <td class="fileStyle">{{ i+1 }}</td>
-                                                    <td class="fileStyle">{{item.designation_label}}</td>
-                                                    <td class="fileStyle">
-                                                        <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.replacement == 1"></i>
-                                                    </td>
-                                                    <td class="fileStyle">
-                                                        <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.repair == 1"></i>
-                                                    </td>
-                                                    <td class="fileStyle">
-                                                        <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.paint == 1"></i>
-                                                    </td>
-                                                    <td class="fileStyle">
-                                                        <i class="fa fa-check-circle" aria-hidden="true" *ngIf="item.control == 1"></i>
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                                <h1 *ngIf="listRepairWork.length <= 0" class="text-center items-center p-2" style="text-align: center;">Aucune donnée à afficher</h1>
-                                            </table>
-                                        </div>
+                                        
 
                                         <div class="text-left d-flex flex-column bd-highlight mt-3 mb-3" style="background-color: rgb(223, 221, 218);">
-                                            <div class="p-2 bd-highlight"><b>NOTE D'EXPERT</b> : <br>
-                                                <p>{{itemSelected.remark}}</p>
+                                            <div class="p-2 bd-highlight"><b>NOTE D'EXPERT</b> : {{itemSelected.remark}}
                                             </div>
                                         </div>
 
@@ -499,10 +502,10 @@
                                                 <tbody>
                                                     <tr>
                                                         <th scope="col">
-                                                            CLIENT
+                                                            EXPERT
                                                         </th>
                                                         <th scope="col">
-                                                            EXPERT
+                                                            CLIENT
                                                         </th>
                                                         <th scope="col">
                                                             REPARATEUR
@@ -512,17 +515,20 @@
                                                 <tbody>
                                                     <tr>
                                                       <td scope="col">
+                                                        <div *ngIf="!itemSelected.expert_signature">
+                                                            <img src="assets/images/wbg.png" width="190" height="70" alt="expert_signature">
+                                                        </div>
+                                                        <div *ngIf="itemSelected.expert_signature">
+                                                          <img src="{{itemSelected.expert_signature}}" width="190" height="70" alt="expert_signature">
+                                                        </div>
+                                                      </td>
+                                                      <td scope="col">
                                                         <div *ngIf="!itemSelected.customer_signature">
                                                             <img src="assets/images/wbg.png" width="190" height="70" alt="customer_signature">
                                                         </div>
                                                         <div *ngIf="itemSelected.customer_signature">
                                                           <img src="{{itemSelected.customer_signature}}" width="190" height="70" alt="customer_signature">
                                                         </div>
-                                                      </td>
-                                                      <td scope="col" class="text-center">
-                                                          <div *ngIf="itemSelected.user_signature">
-                                                              <img src="{{uploadLink}}/storage/signature/{{itemSelected.user_signature}}" width="190" height="70" alt="expert_signature">
-                                                          </div>
                                                       </td>
                                                       <td scope="col">
                                                           <div *ngIf="!itemSelected.repairer_signature">
@@ -737,8 +743,8 @@
 
                                             <div class="flex flex-col md:flex-row gap-4 max-w-[900px] mx-auto">
                                               <div class="grid grid-cols-4 grid-cols-4 gap-4">
-                                                <div class="container" *ngFor='let url of before_images'>
-                                                  <img [src]="url" style="width: 200px; height: 120px;">
+                                                <div class="container" *ngFor='let item of before_images'>
+                                                  <img [src]="item" style="width: 200px; height: 120px;">
                                                   <div class="top-right">
                                                     <a href="javascript:;" x-tooltip="Supprimer" (click)="removeBeforeImage()">
                                                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-danger">
@@ -782,12 +788,12 @@
                                                 </div>
                                               </div>
                                               <div *ngIf="all_before_photos">
-                                                <div class="flex flex-col md:flex-row gap-4 max-w-[900px] mx-auto">
-                                                  <div class="grid grid-cols-4 grid-cols-4 gap-4">
-                                                    <div class="container" *ngFor='let url of all_before_photos'>
-                                                      <img src="{{downloadLink}}/storage/before_photos/{{url}}" style="width: 200px; height: 120px;">
+                                                <div class="flex flex-col md:flex-row gap-3 max-w-[900px] mx-auto">
+                                                  <div class="grid grid-cols-3 grid-cols-3 gap-3">
+                                                    <div class="container" *ngFor='let item of all_before_photos'>
+                                                      <img src="{{downloadLink}}/storage/before_photos/{{item}}.png" style="width: 700px; height: 220px;">
                                                         <div class="top-right">
-                                                          <a x-tooltip="Télécharger" (click)="exportexcel(url)" download="{{url}}" target="_blank">
+                                                          <a x-tooltip="Télécharger" (click)="downloadPhoto(item)" download="{{item}}" target="_blank">
                                                             <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" style="width: 18px;">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                                             </svg>
@@ -809,8 +815,8 @@
 
                                             <div class="flex flex-col md:flex-row gap-4 max-w-[900px] mx-auto">
                                               <div class="grid grid-cols-4 grid-cols-4 gap-4">
-                                                <div class="container" *ngFor='let url of during_images'>
-                                                  <img [src]="url" style="width: 200px; height: 120px;">
+                                                <div class="container" *ngFor='let item of during_images'>
+                                                  <img [src]="item" style="width: 200px; height: 120px;">
                                                   <div class="top-right">
                                                     <a href="javascript:;" x-tooltip="Supprimer" (click)="removeDuringImage()">
                                                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-danger">
@@ -854,12 +860,12 @@
                                                 </div>
                                               </div>
                                               <div *ngIf="all_during_photos">
-                                                <div class="flex flex-col md:flex-row gap-4 max-w-[900px] mx-auto">
-                                                  <div class="grid grid-cols-4 grid-cols-4 gap-4">
-                                                    <div class="container" *ngFor='let url of all_during_photos'>
-                                                      <img src="{{downloadLink}}/storage/during_photos/{{url}}" style="width: 200px; height: 120px;">
+                                                <div class="flex flex-col md:flex-row gap-3 max-w-[900px] mx-auto">
+                                                  <div class="grid grid-cols-3 grid-cols-3 gap-3">
+                                                    <div class="container" *ngFor='let item of all_during_photos'>
+                                                      <img src="{{downloadLink}}/storage/during_photos/{{item}}.png" style="width: 700px; height: 220px;">
                                                         <div class="top-right">
-                                                          <a x-tooltip="Télécharger" (click)="exportexcel(url)" download="{{url}}" target="_blank">
+                                                          <a x-tooltip="Télécharger" (click)="downloadPhoto(item)" download="{{item}}" target="_blank">
                                                             <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" style="width: 18px;">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                                             </svg>
@@ -881,8 +887,8 @@
 
                                             <div class="flex flex-col md:flex-row gap-4 max-w-[900px] mx-auto">
                                               <div class="grid grid-cols-4 grid-cols-4 gap-4">
-                                                <div class="container" *ngFor='let url of after_images'>
-                                                  <img [src]="url" style="width: 200px; height: 120px;">
+                                                <div class="container" *ngFor='let item of after_images'>
+                                                  <img [src]="item" style="width: 200px; height: 120px;">
                                                   <div class="top-right">
                                                     <a href="javascript:;" x-tooltip="Supprimer" (click)="removeAfterImage()">
                                                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-danger">
@@ -926,12 +932,12 @@
                                                 </div>
                                               </div>
                                               <div *ngIf="all_after_photos">
-                                                <div class="flex flex-col md:flex-row gap-4 max-w-[900px] mx-auto">
-                                                  <div class="grid grid-cols-4 grid-cols-4 gap-4">
-                                                    <div class="container" *ngFor='let url of all_after_photos'>
-                                                      <img src="{{downloadLink}}/storage/after_photos/{{url}}" style="width: 200px; height: 120px;">
+                                                <div class="flex flex-col md:flex-row gap-3 max-w-[900px] mx-auto">
+                                                  <div class="grid grid-cols-3 grid-cols-3 gap-3">
+                                                    <div class="container" *ngFor='let item of all_after_photos'>
+                                                      <img src="{{downloadLink}}/storage/after_photos/{{item}}.png" style="width: 700px; height: 220px;">
                                                         <div class="top-right">
-                                                          <a x-tooltip="Télécharger" (click)="exportexcel(url)" download="{{url}}" target="_blank">
+                                                          <a x-tooltip="Télécharger" (click)="downloadPhoto(item)" download="{{item}}" target="_blank">
                                                             <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" style="width: 18px;">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                                             </svg>
@@ -951,12 +957,12 @@
 
                                             <h2 class="text-xl mt-3 mb-3">Photos avant les réparations</h2>
 
-                                            <div class="flex flex-col md:flex-row gap-4 max-w-[900px] mx-auto">
-                                              <div class="grid grid-cols-4 grid-cols-4 gap-4">
-                                                <div class="container" *ngFor='let url of all_before_photos'>
-                                                  <img src="{{downloadLink}}/storage/before_photos/{{url}}" style="width: 200px; height: 120px;">
+                                            <div class="flex flex-col md:flex-row gap-3 max-w-[900px] mx-auto">
+                                              <div class="grid grid-cols-3 grid-cols-3 gap-3">
+                                                <div class="container" *ngFor='let item of all_before_photos'>
+                                                  <img src="{{downloadLink}}/storage/before_photos/{{item}}.png" style="width: 700px; height: 220px;">
                                                     <div class="top-right">
-                                                      <a x-tooltip="Télécharger" (click)="exportexcel(url)" download="{{url}}" target="_blank">
+                                                      <a x-tooltip="Télécharger" (click)="downloadPhoto(item)" download="{{item}}" target="_blank">
                                                         <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" style="width: 18px;">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                                         </svg>
@@ -970,12 +976,12 @@
 
                                             <h2 class="text-xl mt-3 mb-3">Photos pendant les réparations</h2>
 
-                                            <div class="flex flex-col md:flex-row gap-4 max-w-[900px] mx-auto">
-                                              <div class="grid grid-cols-4 grid-cols-4 gap-4">
-                                                <div class="container" *ngFor='let url of all_during_photos'>
-                                                  <img src="{{downloadLink}}/storage/during_photos/{{url}}" style="width: 200px; height: 120px;">
+                                            <div class="flex flex-col md:flex-row gap-3 max-w-[900px] mx-auto">
+                                              <div class="grid grid-cols-3 grid-cols-3 gap-3">
+                                                <div class="container" *ngFor='let item of all_during_photos'>
+                                                  <img src="{{downloadLink}}/storage/during_photos/{{item}}.png" style="width: 700px; height: 220px;">
                                                     <div class="top-right">
-                                                      <a x-tooltip="Télécharger" (click)="exportexcel(url)" download="{{url}}" target="_blank">
+                                                      <a x-tooltip="Télécharger" (click)="downloadPhoto(item)" download="{{item}}" target="_blank">
                                                         <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" style="width: 18px;">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                                         </svg>
@@ -989,12 +995,12 @@
 
                                             <h2 class="text-xl mt-3 mb-3">Photos après les réparations</h2>
 
-                                            <div class="flex flex-col md:flex-row gap-4 max-w-[900px] mx-auto">
-                                              <div class="grid grid-cols-4 grid-cols-4 gap-4">
-                                                <div class="container" *ngFor='let url of all_after_photos'>
-                                                  <img src="{{downloadLink}}/storage/after_photos/{{url}}" style="width: 200px; height: 120px;">
+                                            <div class="flex flex-col md:flex-row gap-3 max-w-[900px] mx-auto">
+                                              <div class="grid grid-cols-3 grid-cols-3 gap-3">
+                                                <div class="container" *ngFor='let item of all_after_photos'>
+                                                  <img src="{{downloadLink}}/storage/after_photos/{{item}}.png" style="width: 700px; height: 220px;">
                                                     <div class="top-right">
-                                                      <a x-tooltip="Télécharger" (click)="exportexcel(url)" download="{{url}}" target="_blank">
+                                                      <a x-tooltip="Télécharger" (click)="downloadPhoto(item)" download="{{item}}" target="_blank">
                                                         <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" style="width: 18px;">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                                         </svg>

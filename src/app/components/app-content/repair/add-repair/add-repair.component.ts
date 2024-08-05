@@ -32,6 +32,10 @@ import { Email } from 'src/app/models/insurer-email.model';
 import { BrandService } from 'src/app/services/app-content/brand.service';
 import { ColorService } from 'src/app/services/app-content/color.service';
 import { ClientService } from 'src/app/services/app-content/client.service';
+import { InsurerService } from 'src/app/services/app-content/insurer.service';
+import { ShockPoint } from 'src/app/models/shock-point.model';
+import { Shock } from 'src/app/models/shock.model';
+import { QrCodeService } from 'src/app/services/app-content/qr-code.service';
 
 @Component({
   selector: 'app-add-repair',
@@ -46,8 +50,28 @@ export class AddRepairComponent implements OnInit {
   listColor: any;
   listRepairer: any;
   listClient: any;
+  listInsurer: any;
   listVehicle: any;
   listRemark: any;
+
+  shocks: Array<{
+    shock_point_id: number,
+    shock_point_label: string,
+    works: Array<{
+      designation_id: number,
+      designation_label: string,
+      replacement: number,
+      repair: number,
+      paint: number,
+      control: number,
+    }>;
+  }> = []
+
+  shock_points: Array<{
+    shock_point_id: number,
+    shock_point_label: string,
+    works?: any;
+  }> = []
 
   works: Array<{
     designation_id: number,
@@ -62,7 +86,7 @@ export class AddRepairComponent implements OnInit {
     email: string,
   }> = []
 
-  insurer_email: string = "";
+  insured_email: string = "";
 
   designation_id!:any;
   label: string = "";
@@ -73,8 +97,9 @@ export class AddRepairComponent implements OnInit {
 
   repairer_id!: number;
   client_id!: number;
+  insurer_id!: number;
   vehicle_id!: number;
-  shock_point_id!: number;
+  shock_point_id!: any;
   brand_id!: any;
   color_id!: any;
   point_of_shock: string = "";
@@ -90,6 +115,7 @@ export class AddRepairComponent implements OnInit {
   exist_error:boolean = false;
   exist_success:boolean = false;
 
+  exist_shock_error:boolean = false;
   exist_work_error:boolean = false;
   exist_email_error:boolean = false;
   exist_signature_error:boolean = false;
@@ -114,8 +140,11 @@ export class AddRepairComponent implements OnInit {
   submittedStep6 = false;
   submittedStep7 = false;
   submittedStep8 = false;
+  submittedShockPoint = false;
   submittedWork = false;
   submittedEmail = false;
+  addShockPoint = false;
+  removeShockPoint = false;
   addWork = false;
   removeWork = false;
   addEmail = false;
@@ -124,6 +153,8 @@ export class AddRepairComponent implements OnInit {
   user_logged!: any;
 
   submit: boolean = false;
+  submitAddShockPoint: boolean = false;
+  submitRemoveShockPoint: boolean = false;
   submitAddWork: boolean = false;
   submitRemoveWork: boolean = false;
   submitAddEmail: boolean = false;
@@ -140,12 +171,15 @@ export class AddRepairComponent implements OnInit {
   step6: boolean = false;
   step7: boolean = false;
   step8: boolean = false;
+  step9: boolean = false;
 
   npage!: number;
   token!: any;
   decode_token!: any;
   user_logged_id!: any;
 
+  shockPointSelected_id!: any;
+  shockPointSelected!: any;
   designationSelected!: any;
   emailSelected!: any;
 
@@ -160,6 +194,12 @@ export class AddRepairComponent implements OnInit {
   client_email: string = "";
   client_address: string = "";
   client_phone: string = "";
+
+  insurer_name: string = "";
+  insurer_email: string = "";
+  insurer_address: string = "";
+  insurer_phone: string = "";
+  disaster_number: string = "";
 
   license_plate: string = "";
   brand: string = "";
@@ -201,6 +241,8 @@ export class AddRepairComponent implements OnInit {
 
   uploadLink = environment.upload_url;
 
+  qr_code: string ="";
+
   constructor(
     public Jarwis: JarwisService,
     public repairService: RepairService,
@@ -209,8 +251,10 @@ export class AddRepairComponent implements OnInit {
     public shockPointService: ShockPointService,
     public brandService: BrandService,
     public colorService: ColorService,
+    public qrCodeService: QrCodeService,
     public repairerService: RepairerService,
     public clientService: ClientService,
+    public insurerService: InsurerService,
     public vehicleService: VehicleService,
     private herdersService: HeadersService,
     private route:ActivatedRoute,
@@ -241,8 +285,10 @@ export class AddRepairComponent implements OnInit {
     this.getColors();
     this.getRepairers();
     this.getClients();
+    this.getInsurers();
     this.getVehicles();
     this.getRemarks();
+    this.getQrCode();
 
     this.getUserLogged();
 
@@ -262,10 +308,15 @@ export class AddRepairComponent implements OnInit {
     });
 
     this.formGroupStep4 = new FormGroup({
+      insurer_name: new FormControl('', [Validators.required]),
+      disaster_number: new FormControl('', [Validators.required]),
+    });
+
+    this.formGroupStep5 = new FormGroup({
       shock_point_label: new FormControl('', [Validators.required]),
     });
 
-    this.formGroupStep6 = new FormGroup({
+    this.formGroupStep7 = new FormGroup({
       remark: new FormControl('', [Validators.required]),
     });
 
@@ -278,7 +329,7 @@ export class AddRepairComponent implements OnInit {
     });
 
     this.emailFormGroup = new FormGroup({
-      insurer_email: new FormControl('', [Validators.required]),
+      insured_email: new FormControl('', [Validators.required]),
       // replacement: new FormControl('', [Validators.required]),
       // repair: new FormControl('', [Validators.required]),
       // paint: new FormControl('', [Validators.required]),
@@ -595,7 +646,7 @@ export class AddRepairComponent implements OnInit {
       return;
 
     } else {
-      this.checkShockPointId();
+      this.saveClient();
       this.step4 = !this.step4;
       this.step5 = !this.step5;
     }
@@ -603,32 +654,49 @@ export class AddRepairComponent implements OnInit {
 
   get fStep5() { return this.formGroupStep5.controls; }
   validateStep5(){
+    this.submittedStep5 = true;
+    if (this.formGroupStep5.invalid) {
+      return;
+
+    } else {
+      if (this.shock_points.length > 0) {
+        this.checkShockPointId();
+        this.step5 = !this.step5;
+        this.step6 = !this.step6;
+        this.exist_shock_error = false;
+      } else {
+        this.exist_shock_error = true;
+      }
+    }
+  }
+
+  validateStep6(){
     if (this.works.length > 0) {
-      this.step5 = !this.step5;
       this.step6 = !this.step6;
+      this.step7 = !this.step7;
       this.exist_work_error = false;
     } else {
       this.exist_work_error = true;
     }
   }
 
-  get fStep6() { return this.formGroupStep6.controls; }
-  validateStep6(){
-    this.submittedStep6 = true;
-    if (this.formGroupStep6.invalid) {
+  get fStep7() { return this.formGroupStep7.controls; }
+  validateStep7(){
+    this.submittedStep7 = true;
+    if (this.formGroupStep7.invalid) {
       return;
 
     } else {
       if(this.emails.length < 2){
         this.saveRepairerEmail();
       }
-      this.step6 = !this.step6;
       this.step7 = !this.step7;
+      this.step8 = !this.step8;
     }
   }
 
-  get fStep7() { return this.formGroupStep7.controls; }
-  validateStep7(){
+  get fStep8() { return this.formGroupStep7.controls; }
+  validateStep8(){
     if (this.emails.length < 1) {
       this.exist_email_error = true;
     }
@@ -636,8 +704,8 @@ export class AddRepairComponent implements OnInit {
     //   this.exist_signature_error = true;
     // }
     else {
-      this.step7 = !this.step7;
       this.step8 = !this.step8;
+      this.step9 = !this.step9;
       this.exist_email_error = false;
       this.exist_signature_error = false;
     }
@@ -715,6 +783,12 @@ export class AddRepairComponent implements OnInit {
     })
   }
 
+  getQrCode(){
+    this.qrCodeService.getOneQrCodes().subscribe((data: any) => {
+      this.qr_code = data.qr_code.qr_code;
+    })
+  }
+
   getBrands(){
     this.brandService.getAllBrands().subscribe((data: any) => {
       this.listBrand = data.brands;
@@ -742,6 +816,12 @@ export class AddRepairComponent implements OnInit {
   getClients(){
     this.clientService.getAllClients().subscribe((data: any) => {
       this.listClient = data.clients;
+    })
+  }
+
+  getInsurers(){
+    this.insurerService.getAllInsurers().subscribe((data: any) => {
+      this.listInsurer = data.insurers;
     })
   }
 
@@ -787,6 +867,22 @@ export class AddRepairComponent implements OnInit {
         }
         if(data.client.phone != 'null'){
           this.client_phone = data.client.phone;
+        }
+      });
+    }
+  }
+
+  changeInsurer(event: any) {
+    if(event){
+      this.insurerService.getInsurerById(event).subscribe((data: any) => {
+        if(data.insurer.name != 'null'){
+          this.insurer_name = data.insurer.name;
+        }
+        if(data.insurer.email != 'null'){
+          this.insurer_email = data.insurer.email;
+        }
+        if(data.insurer.phone != 'null'){
+          this.insurer_phone = data.insurer.phone;
         }
       });
     }
@@ -872,8 +968,10 @@ export class AddRepairComponent implements OnInit {
   }
 
   checkShockPointId(){
-    if(this.shock_point_id){
-      this.getShockPointById(this.shock_point_id);
+    for( var i = 0; i < this.shock_points.length; i++){
+      if(this.shock_points[i].shock_point_id){
+        this.getShockPointById(this.shock_points[i].shock_point_id);
+      }
     }
   }
 
@@ -934,12 +1032,31 @@ export class AddRepairComponent implements OnInit {
     }
   }
 
-  itemClick(item:any) {
-    this.designationSelected = item;
-    console.log("designationSelected",this.designationSelected);
+  shockPointClick(item:any) {
+    this.shockPointSelected = item;
   }
 
-  deleteItem() {
+  designationClick(item:any) {
+    this.designationSelected = item;
+  }
+
+  deleteShockPoint() {
+    this.submitRemoveShockPoint = true;
+    this.error_message = "";
+    for( var i = 0; i < this.shock_points.length; i++){
+
+      if(this.shock_points[i].shock_point_id == this.shockPointSelected.shock_point_id){
+        console.log("Suppression du stock",this.shock_points[i].shock_point_id);
+        this.shock_points.splice(i, 1);
+        this.removeShockPoint = false;
+        this.submitRemoveShockPoint = false;
+        this.shock_point_id = null;
+      }
+
+    }
+  }
+
+  deleteWork() {
     this.submitRemoveWork = true;
     this.error_message = "";
     for( var i = 0; i < this.works.length; i++){
@@ -968,7 +1085,7 @@ export class AddRepairComponent implements OnInit {
         this.emails.splice(i, 1);
         this.removeEmail = false;
         this.submitRemoveEmail = false;
-        this.insurer_email = "";
+        this.insured_email = "";
       }
 
     }
@@ -990,6 +1107,9 @@ export class AddRepairComponent implements OnInit {
 
   resetAll(){
     this.designationFormGroup.reset();
+    this.shock_point_id = null;
+    this.shock_point_label = "";
+    this.designation_id = null;
     this.label = "";
     this.replacement = 0;
     this.repair = 0;
@@ -997,9 +1117,115 @@ export class AddRepairComponent implements OnInit {
     this.control = 0;
   }
 
+  get fShock() { return this.formGroupStep5.controls; }
+
+  saveShockPoint(){
+    this.error_message = "";
+    this.submittedShockPoint = true;
+    this.exist_work_error = false;
+
+    if (this.formGroupStep5.invalid) {
+      return;
+
+    } else {
+      this.submitAddShockPoint = true;
+      if(this.shock_point_id){
+        this.shockPointService.getShockPointById(this.shock_point_id).subscribe((data: any) => {
+          for( var i = 0; i < this.shock_points.length; i++){
+
+            if(this.shock_points[i].shock_point_id == this.shock_point_id){
+              this.shock_point_label = data.shock_point.label;
+              this.exist = true;
+              this.submitAddShockPoint = false;
+            } else {
+              this.exist = false;
+            }
+          }
+
+          if(this.exist == false){
+            const newShockPoint = new ShockPoint();
+            newShockPoint.shock_point_id = this.shock_point_id;
+            newShockPoint.shock_point_label = data.shock_point.label;
+            newShockPoint.works = [];
+            this.shock_points.push(newShockPoint);
+            this.submitAddShockPoint = false;
+            this.addShockPoint = false;
+            this.shock_point_id = null;
+          }
+          this.resetAll();
+        });
+      } else {
+        const formData = new FormData();
+        formData.append('label',this.shock_point_label);
+
+        this.shockPointService.add(formData).subscribe((res: any) => {
+          this.message = res;
+          if(this.message.success == false){
+            this.submit = false;
+            this.error_message = this.message.message;
+            this.exist_error = false;
+            this.toast = {
+              message: this.message.message,
+              title: 'Erreur',
+              type: 'error',
+              ic: {
+                timeOut: 5000,
+                closeButton: true,
+                progressBar: true,
+              } as GlobalConfig,
+            };
+            this.cs.showToast(this.toast);
+          } else {
+            for( var i = 0; i < this.shock_points.length; i++){
+
+              if(this.shock_points[i].shock_point_id == res.shock_point.id){
+                this.shock_point_label = res.shock_point.label;
+                this.exist = true;
+                this.submitAddShockPoint = false;
+              } else {
+                this.exist = false;
+              }
+            }
+
+            if(this.exist == false){
+              const newShockPoint = new ShockPoint();
+              newShockPoint.shock_point_id = res.shock_point.id;
+              newShockPoint.shock_point_label = res.shock_point.label;
+              newShockPoint.works = [];
+              this.shock_points.push(newShockPoint);
+              this.submitAddShockPoint = false;
+              this.addShockPoint = false;
+              this.shock_point_id = null;
+            }
+            this.resetAll();
+            this.getShockPoints();
+          }
+        },
+        (err: HttpErrorResponse) => {
+          this.exist_error = true;
+          this.error_message = err.error.message;
+          this.submit = false;
+          this.toast = {
+            message: err.error.error,
+            title: 'Erreur',
+            type: 'error',
+            ic: {
+              timeOut: 5000,
+              closeButton: true,
+              progressBar: true,
+            } as GlobalConfig,
+          };
+          this.submit = false;
+          this.SpinnerService.hide();
+          this.cs.showToast(this.toast);
+        });
+      }
+    }
+  }
+
   get fWork() { return this.designationFormGroup.controls; }
 
-  saveWork(){
+  saveWork(item:any){
     this.error_message = "";
     this.submittedWork = true;
     this.exist_work_error = false;
@@ -1031,9 +1257,27 @@ export class AddRepairComponent implements OnInit {
             newWork.paint = this.paint;
             newWork.control = this.control;
             this.works.push(newWork);
+
+            for( var i = 0; i < this.shock_points.length; i++){
+              if(this.shock_points[i].shock_point_id == item.shock_point_id){
+                this.shock_points[i].works.push(newWork);
+              }
+            }
+
+            for( var i = 0; i < this.shock_points.length; i++){
+              if(this.shock_points[i].shock_point_id == item.shock_point_id){
+                const newShock = new Shock();
+                newShock.shock_point_id = this.shock_points[i].shock_point_id;
+                newShock.shock_point_label = this.shock_points[i].shock_point_label;
+                newShock.works = newWork;
+                this.shocks.push(newShock);
+              }
+            }
             this.submitAddWork = false;
             this.addWork = false;
           }
+          console.log("aert",this.shock_points);
+          console.log("aert",this.shocks);
           this.resetAll();
         });
       } else {
@@ -1080,7 +1324,25 @@ export class AddRepairComponent implements OnInit {
               this.works.push(newWork);
               this.submitAddWork = false;
               this.addWork = false;
+
+              for( var i = 0; i < this.shock_points.length; i++){
+                if(this.shock_points[i].shock_point_id == item.shock_point_id){
+                  this.shock_points[i].works.push(newWork);
+                }
+              }
+
+              for( var i = 0; i < this.shock_points.length; i++){
+                if(this.shock_points[i].shock_point_id == item.shock_point_id){
+                  const newShock = new Shock();
+                  newShock.shock_point_id = this.shock_points[i].shock_point_id;
+                  newShock.shock_point_label = this.shock_points[i].shock_point_label;
+                  newShock.works = newWork;
+                  this.shocks.push(newShock);
+                }
+              }
             }
+            console.log("aert",this.shock_points);
+            console.log("aert",this.shocks);
             this.resetAll();
             this.getDesignations();
           }
@@ -1189,7 +1451,7 @@ export class AddRepairComponent implements OnInit {
       this.submitAddEmail = true;
       for( var i = 0; i < this.emails.length; i++){
 
-        if(this.emails[i].email == this.insurer_email.toLowerCase()){
+        if(this.emails[i].email == this.insured_email.toLowerCase()){
           this.existEmail = true;
           this.submitAddEmail = false;
         } else {
@@ -1199,11 +1461,11 @@ export class AddRepairComponent implements OnInit {
 
       if(this.existEmail == false){
         const newEmail = new Email();
-        newEmail.email = this.insurer_email.toLowerCase();
+        newEmail.email = this.insured_email.toLowerCase();
         this.emails.push(newEmail);
         this.submitAddEmail = false;
         this.addEmail = false;
-        this.insurer_email = "";
+        this.insured_email = "";
       }
     }
   }
@@ -1229,9 +1491,9 @@ export class AddRepairComponent implements OnInit {
       } else if(!this.vehicle_id){
         console.log("6");
         this.save_with_new_vehicle();
-      } else if(!this.shock_point_id){
-        console.log("7");
-        this.save_with_new_shock_point();
+      // } else if(!this.shock_point_id){
+      //  console.log("7");
+      //  this.save_with_new_shock_point();
       } else {
         console.log("8");
         this.save_without_new_repairer_and_new_vehicle_and_new_shock_point();
@@ -1248,11 +1510,15 @@ export class AddRepairComponent implements OnInit {
     repair.expert_signature = this.expertSignatureImg;
     repair.repairer_signature = this.repairerSignatureImg;
     repair.customer_signature = this.customerSignatureImg;
-    repair.works = this.works;
+    repair.shock_points = this.shock_points;
     repair.emails = this.emails;
-    repair.name = this.client_name;
-    repair.email = this.client_email;
-    repair.phone = this.client_phone;
+    repair.client_name = this.client_name;
+    repair.client_email = this.client_email;
+    repair.client_phone = this.client_phone;
+    repair.insurer_name = this.insurer_name;
+    repair.insurer_email = this.insurer_email;
+    repair.insurer_phone = this.insurer_phone;
+    repair.disaster_number = this.disaster_number;
 
     this.repairService.add(repair).subscribe(res => {
       this.message = res;
@@ -1393,8 +1659,15 @@ export class AddRepairComponent implements OnInit {
                 repair.expert_signature = this.expertSignatureImg;
                 repair.repairer_signature = this.repairerSignatureImg;
                 repair.customer_signature = this.customerSignatureImg;
-                repair.works = this.works;
+                repair.shock_points = this.shock_points;
                 repair.emails = this.emails;
+                repair.client_name = this.client_name;
+                repair.client_email = this.client_email;
+                repair.client_phone = this.client_phone;
+                repair.insurer_name = this.insurer_name;
+                repair.insurer_email = this.insurer_email;
+                repair.insurer_phone = this.insurer_phone;
+                repair.disaster_number = this.disaster_number;
 
                 this.repairService.add(repair).subscribe(res => {
                   this.message = res;
@@ -1573,8 +1846,15 @@ export class AddRepairComponent implements OnInit {
             repair.expert_signature = this.expertSignatureImg;
             repair.repairer_signature = this.repairerSignatureImg;
             repair.customer_signature = this.customerSignatureImg;
-            repair.works = this.works;
+            repair.shock_points = this.shock_points;
             repair.emails = this.emails;
+            repair.client_name = this.client_name;
+            repair.client_email = this.client_email;
+            repair.client_phone = this.client_phone;
+            repair.insurer_name = this.insurer_name;
+            repair.insurer_email = this.insurer_email;
+            repair.insurer_phone = this.insurer_phone;
+            repair.disaster_number = this.disaster_number;
 
             this.repairService.add(repair).subscribe(res => {
               this.message = res;
@@ -1727,8 +2007,15 @@ export class AddRepairComponent implements OnInit {
             repair.expert_signature = this.expertSignatureImg;
             repair.repairer_signature = this.repairerSignatureImg;
             repair.customer_signature = this.customerSignatureImg;
-            repair.works = this.works;
+            repair.shock_points = this.shock_points;
             repair.emails = this.emails;
+            repair.client_name = this.client_name;
+            repair.client_email = this.client_email;
+            repair.client_phone = this.client_phone;
+            repair.insurer_name = this.insurer_name;
+            repair.insurer_email = this.insurer_email;
+            repair.insurer_phone = this.insurer_phone;
+            repair.disaster_number = this.disaster_number;
 
             this.repairService.add(repair).subscribe(res => {
               this.message = res;
@@ -1882,8 +2169,15 @@ export class AddRepairComponent implements OnInit {
             repair.expert_signature = this.expertSignatureImg;
             repair.repairer_signature = this.repairerSignatureImg;
             repair.customer_signature = this.customerSignatureImg;
-            repair.works = this.works;
+            repair.shock_points = this.shock_points;
             repair.emails = this.emails;
+            repair.client_name = this.client_name;
+            repair.client_email = this.client_email;
+            repair.client_phone = this.client_phone;
+            repair.insurer_name = this.insurer_name;
+            repair.insurer_email = this.insurer_email;
+            repair.insurer_phone = this.insurer_phone;
+            repair.disaster_number = this.disaster_number;
 
             this.repairService.add(repair).subscribe(res => {
               this.message = res;
@@ -2015,8 +2309,15 @@ export class AddRepairComponent implements OnInit {
         repair.expert_signature = this.expertSignatureImg;
         repair.repairer_signature = this.repairerSignatureImg;
         repair.customer_signature = this.customerSignatureImg;
-        repair.works = this.works;
+        repair.shock_points = this.shock_points;
         repair.emails = this.emails;
+        repair.client_name = this.client_name;
+        repair.client_email = this.client_email;
+        repair.client_phone = this.client_phone;
+        repair.insurer_name = this.insurer_name;
+        repair.insurer_email = this.insurer_email;
+        repair.insurer_phone = this.insurer_phone;
+        repair.disaster_number = this.disaster_number;
 
         this.repairService.add(repair).subscribe(res => {
           this.message = res;
@@ -2130,8 +2431,15 @@ export class AddRepairComponent implements OnInit {
         repair.expert_signature = this.expertSignatureImg;
         repair.repairer_signature = this.repairerSignatureImg;
         repair.customer_signature = this.customerSignatureImg;
-        repair.works = this.works;
+        repair.shock_points = this.shock_points;
         repair.emails = this.emails;
+        repair.client_name = this.client_name;
+        repair.client_email = this.client_email;
+        repair.client_phone = this.client_phone;
+        repair.insurer_name = this.insurer_name;
+        repair.insurer_email = this.insurer_email;
+        repair.insurer_phone = this.insurer_phone;
+        repair.disaster_number = this.disaster_number;
 
         this.repairService.add(repair).subscribe(res => {
           this.message = res;
@@ -2237,8 +2545,15 @@ export class AddRepairComponent implements OnInit {
         repair.expert_signature = this.expertSignatureImg;
         repair.repairer_signature = this.repairerSignatureImg;
         repair.customer_signature = this.customerSignatureImg;
-        repair.works = this.works;
+        repair.shock_points = this.shock_points;
         repair.emails = this.emails;
+        repair.client_name = this.client_name;
+        repair.client_email = this.client_email;
+        repair.client_phone = this.client_phone;
+        repair.insurer_name = this.insurer_name;
+        repair.insurer_email = this.insurer_email;
+        repair.insurer_phone = this.insurer_phone;
+        repair.disaster_number = this.disaster_number;
 
         this.repairService.add(repair).subscribe(res => {
           this.message = res;

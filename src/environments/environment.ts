@@ -14,8 +14,8 @@ export const environment = {
   // api_url: 'https://core.yobsaj.com/api',
   // upload_url: 'https://core.yobsaj.com',
 
-  api_url: 'http://localhost:8000/api',
-  upload_url: 'http://localhost:8000',
+  api_url: 'https://sga-back.ddev.site/api',
+  upload_url: 'https://sga-back.ddev.site',
 };
 
 /*
